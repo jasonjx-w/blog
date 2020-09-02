@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      run:
+      run: |
         git clone git@github.com:jasonjx-w/jasonjx-w.github.io.git template
         # docker run \
         # -v ${{ github.workspace }}:/srv/jekyll -v ${{ github.workspace }}/_site:/srv/jekyll/_site \
