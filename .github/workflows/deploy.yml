@@ -13,10 +13,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-      with:
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
       run:
         git clone git@github.com:jasonjx-w/jasonjx-w.github.io.git template
         # docker run \
         # -v ${{ github.workspace }}:/srv/jekyll -v ${{ github.workspace }}/_site:/srv/jekyll/_site \
         # jekyll/builder:latest /bin/bash -c "chmod 777 /srv/jekyll && jekyll build --future"
+      with:
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
