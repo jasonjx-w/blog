@@ -11,14 +11,3 @@ jobs:
     steps:
     - name: nothing
       uses: jasonjx-w/jasonjx-w.github.io@master
-    steps:
-      run: |
-        ls
-        pwd
-
-    steps:
-      - uses: actions/checkout@v2
-        run: |
-          docker run \
-          -v ${{ github.workspace }}:/srv/jekyll -v ${{ github.workspace }}/_site:/srv/jekyll/_site \
-          jekyll/builder:latest /bin/bash -c "chmod 777 /srv/jekyll && jekyll build --future"
