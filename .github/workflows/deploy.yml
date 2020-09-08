@@ -48,6 +48,8 @@ jobs:
       run: | 
         cp -r $BLOG_PATH/* $DEPLOY_PATH/_posts/
         echo "Now ${PWD}"
+        ls
+        ls ..
         echo "ws is ${{ github.workspace }}"
         
         cd $DEPLOY_PATH
