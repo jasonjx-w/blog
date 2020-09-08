@@ -36,7 +36,7 @@ jobs:
     - name: Configuration environment
       env: 
         ACTION_DEPLOY_KEY: ${{ secrets.ACTION_DEPLOY_KEY }}
-      run:
+      run: |
         mkdir -p ~/.ssh/
         touch ~/.ssh/id_rsa
         echo "$ACTION_DEPLOY_KEY"
