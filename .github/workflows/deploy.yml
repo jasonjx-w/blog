@@ -56,7 +56,6 @@ jobs:
         echo "ws is ${{ github.workspace }}"
         echo "deploy path is ${{ env.DEPLOY_PATH }}"
         
-        cd $DEPLOY_PATH
         docker run \ 
-        -v ${{ github.workspace }}:/srv/jekyll -v ${{ github.workspace }}/_site:/srv/jekyll/_site \ 
+        -v ${{ github.workspace }}/${{ env.DEPLOY_PATH }}:/srv/jekyll -v ${{ github.workspace }}/${{ env.DEPLOY_PATH }}/_site:/srv/jekyll/_site \ 
         jekyll/builder:latest /bin/bash -c "chmod 777 /srv/jekyll && jekyll build --future"
