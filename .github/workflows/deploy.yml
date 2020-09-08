@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: nothing
+    - name: nothing
       uses: jasonjx-w/jasonjx-w.github.io@master
       run: |
         ls
