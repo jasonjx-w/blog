@@ -8,6 +8,13 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      uses: jasonjx-w/jasonjx-w.github.io@master
-      with:
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
+    - name: Checkout
+      uses: actions/checkout@master
+
+    - name: Build and Deploy
+      uses: jasonjx-w/jasonjx.github.io@master
+      env:
+        ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+        BRANCH: gh-pages
+        FOLDER: build
+        BUILD_SCRIPT: npm install && npm run build
