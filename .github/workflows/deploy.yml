@@ -38,8 +38,6 @@ jobs:
         ACTION_DEPLOY_KEY: ${{ secrets.ACTION_DEPLOY_KEY }}
       run: |
         mkdir -p ~/.ssh/
-        touch ~/.ssh/id_rsa
-        echo "$ACTION_DEPLOY_KEY"
         echo "$ACTION_DEPLOY_KEY" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
         ssh-keyscan github.com >> ~/.ssh/known_hosts
@@ -48,7 +46,7 @@ jobs:
     
     - name: Deploy
       run: | 
-        cp $BLOG_PATH/* $DEPLOY_PATH/_posts/
+        cp -r $BLOG_PATH/* $DEPLOY_PATH/_posts/
         docker run \ 
         -v ${{ env.DEPLOY_PATH }}:/srv/jekyll -v ${{ env.DEPLOY_PATH }}/_site:/srv/jekyll/_site \ 
         jekyll/builder:latest /bin/bash -c "chmod 777 /srv/jekyll && jekyll build --future"
