@@ -4,17 +4,49 @@ on:
   push:
     branches: [ master ]
 
+env:
+  GIT_USER: jasonjx-w
+  GIT_EMAIL: jasonjx.w@outlook.com
+  BLOG_REPO: jasonjx-w/blog
+  BLOG_BRANCH: master
+  BLOG_PATH: blog
+  DEPLOY_REPO: jasonjx-w/jasonjx-w.github.io
+  DEPLOY_BRANCH: master
+  DEPLOY_PATH: deploy
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    steps:
-    - name: Checkout
-      uses: actions/checkout@master
 
-    - name: Build and Deploy
-      uses: jasonjx-w/jasonjx.github.io@master
-      env:
-        ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-        BRANCH: gh-pages
-        FOLDER: build
-        BUILD_SCRIPT: npm install && npm run build
+    steps:
+    - name: Checkout deploy repo
+      uses: actions/checkout@v2
+      with:
+        repository: ${{ env.DEPLOY_REPO }}
+        ref: ${{ env.DEPLOY_BRANCH }}
+        path: ${{ env.DEPLOY_PATH }}
+          
+    - name: Checkout blog
+      uses: actions/checkout@v2
+      with:
+        repository: ${{ env.BLOG_REPO }}
+        ref: ${{ env.BLOG_BRANCH }}
+        path: ${{ env.BLOG_PATH }}
+    
+    - name: Configuration environment
+      env: 
+        ACTION_DEPLOY_KEY: ${{ secrets.ACTION_DEPLOY_KEY }}
+      run:
+        mkdir -p ~/.ssh/
+        echo "$HEXO_DEPLOY_PRI" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan github.com >> ~/.ssh/known_hosts
+        git config --global user.name $GIT_USER
+        git config --global user.email $GIT_EMAIL
+    
+    - name: Deploy
+      run: | 
+        cp $BLOG_PATH/* $DEPLOY_PATH/_posts/
+        docker run \ 
+        -v ${{ env.DEPLOY_PATH }}:/srv/jekyll -v ${{ env.DEPLOY_PATH }}/_site:/srv/jekyll/_site \ 
+        jekyll/builder:latest /bin/bash -c "chmod 777 /srv/jekyll && jekyll build --future"
