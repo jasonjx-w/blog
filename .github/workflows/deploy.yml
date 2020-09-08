@@ -47,6 +47,7 @@ jobs:
     - name: Deploy
       run: | 
         cp -r $BLOG_PATH/* $DEPLOY_PATH/_posts/
+        cd $DEPLOY_PATH
         docker run \ 
         -v ${{ github.workspace }}:/srv/jekyll -v ${{ github.workspace }}/_site:/srv/jekyll/_site \ 
         jekyll/builder:latest /bin/bash -c "chmod 777 /srv/jekyll && jekyll build --future"
