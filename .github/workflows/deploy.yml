@@ -11,9 +11,11 @@ jobs:
     steps:
     - name: nothing
       uses: jasonjx-w/jasonjx-w.github.io@master
+    steps:
       run: |
         ls
         pwd
+
     steps:
       - uses: actions/checkout@v2
         run: |
