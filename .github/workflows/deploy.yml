@@ -7,9 +7,6 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
-    steps:
-      uses: actions/checkout@v2
     steps:
       uses: jasonjx-w/jasonjx-w.github.io@master
       with:
