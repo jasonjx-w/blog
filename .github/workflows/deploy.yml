@@ -9,5 +9,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      uses: actions/checkout@v2
+    steps:
     - name: nothing
       uses: jasonjx-w/jasonjx-w.github.io@master
