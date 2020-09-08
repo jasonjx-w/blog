@@ -54,6 +54,7 @@ jobs:
         echo "and .. have"
         ls -al ..
         echo "ws is ${{ github.workspace }}"
+        echo "deploy path is ${{ env.DEPLOY_PATH }}"
         
         cd $DEPLOY_PATH
         docker run \ 
