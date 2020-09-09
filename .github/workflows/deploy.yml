@@ -47,18 +47,7 @@ jobs:
     - name: Deploy
       run: | 
         cp -r $BLOG_PATH/* $DEPLOY_PATH/_posts/
-        echo "Now ${PWD}"
-        echo "and i have"
-        ls -al
-
-        echo "and .. have"
-        ls -al ..
-        echo "ws is ${{ github.workspace }}"
-        echo "deploy path is ${{ github.workspace }}/${{ env.DEPLOY_PATH }}"
         export ABS_DEPLOY_PATH=${{ github.workspace }}/${{ env.DEPLOY_PATH }}
-        echo "abs path is $ABS_DEPLOY_PATH"
-        ls $ABS_DEPLOY_PATH
         
-        docker run \ 
-        -v ${{ github.workspace }}/${{ env.DEPLOY_PATH }}:/srv/jekyll -v ${{ github.workspace }}/${{ env.DEPLOY_PATH }}/_site:/srv/jekyll/_site \ 
+        docker run -v $ABS_DEPLOY_PATH:/srv/jekyll -v $ABS_DEPLOY_PATH/_site:/srv/jekyll/_site \ 
         jekyll/builder:latest /bin/bash -c "chmod 777 /srv/jekyll && jekyll build --future"
