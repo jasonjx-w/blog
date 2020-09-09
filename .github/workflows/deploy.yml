@@ -25,6 +25,9 @@ jobs:
         repository: ${{ env.DEPLOY_REPO }}
         ref: ${{ env.DEPLOY_BRANCH }}
         path: ${{ env.DEPLOY_PATH }}
+        ssh-key: ${{ secrets.ACTION_DEPLOY_KEY }}
+        ssh-strict: false
+        persist-credentials: false
         submodules: true
 
     - name: Checkout blog
@@ -33,9 +36,6 @@ jobs:
         repository: ${{ env.BLOG_REPO }}
         ref: ${{ env.BLOG_BRANCH }}
         path: ${{ env.BLOG_PATH }}
-        ssh-key: ${{ secrets.ACTION_DEPLOY_KEY }}
-        ssh-strict: false
-        persist-credentials: false
         submodules: true
     
     - name: Configuration environment
