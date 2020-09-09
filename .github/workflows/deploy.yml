@@ -51,7 +51,8 @@ jobs:
 
     - name: Commit deploy repo
       run: | 
-        cd $ABS_DEPLOY_PATH
+        cd ${{ github.workspace }}/${{ env.DEPLOY_PATH }}
+        ls
         git add .
         git commit -m "rebuilding at `date`"
         git push origin master
