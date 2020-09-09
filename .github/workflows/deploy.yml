@@ -26,7 +26,6 @@ jobs:
         ref: ${{ env.DEPLOY_BRANCH }}
         path: ${{ env.DEPLOY_PATH }}
         submodules: true
-        lfs: true
 
     - name: Checkout blog
       uses: actions/checkout@v2
@@ -35,12 +34,9 @@ jobs:
         ref: ${{ env.BLOG_BRANCH }}
         path: ${{ env.BLOG_PATH }}
         ssh-key: ${{ secrets.ACTION_DEPLOY_KEY }}
-        ssh-known-hosts: ${`ssh-keyscan github.com`}
         ssh-strict: false
         persist-credentials: false
         submodules: true
-        lfs: true
-
     
     - name: Configuration environment
       env: 
