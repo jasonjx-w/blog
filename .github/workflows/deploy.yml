@@ -52,7 +52,7 @@ jobs:
     
     - name: Deploy
       run: | 
-        cp -r ${{ env.BLOG_PATH }}/* ${{ env.DEPLOY_PATH }}/_posts/
+        cp -u -p -r ${{ env.BLOG_PATH }}/* ${{ env.DEPLOY_PATH }}/_posts/
         export ABS_DEPLOY_PATH=${{ github.workspace }}/${{ env.DEPLOY_PATH }}
         docker run -v $ABS_DEPLOY_PATH:/srv/jekyll jekyll/builder:latest /bin/bash -c "ls /srv/jekyll"
 
