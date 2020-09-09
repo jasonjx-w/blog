@@ -50,4 +50,5 @@ jobs:
         export ABS_DEPLOY_PATH=${{ github.workspace }}/${{ env.DEPLOY_PATH }}
         
         docker run -v $ABS_DEPLOY_PATH:/srv/jekyll -v $ABS_DEPLOY_PATH/_site:/srv/jekyll/_site \ 
-        jekyll/builder:latest /bin/bash -c "chmod 777 /srv/jekyll && jekyll build --future"
+        jekyll/builder:latest /bin/bash -c "ls /srv/jekyll"
+        # jekyll/builder:latest /bin/bash -c "chmod 777 /srv/jekyll && jekyll build --future"
