@@ -48,3 +48,10 @@ jobs:
       run: | 
         export ABS_DEPLOY_PATH=${{ github.workspace }}/${{ env.DEPLOY_PATH }}
         docker run -v $ABS_DEPLOY_PATH:/srv/jekyll jekyll/builder:latest /bin/bash -c "ls /srv/jekyll"
+
+    - name: Commit deploy repo
+      run: | 
+        cd $ABS_DEPLOY_PATH
+        git add .
+        git commit -m "rebuilding at `date`"
+        git push origin master
