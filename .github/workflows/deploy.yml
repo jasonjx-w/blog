@@ -26,6 +26,7 @@ jobs:
         ref: ${{ env.DEPLOY_BRANCH }}
         path: ${{ env.DEPLOY_PATH }}
         submodules: true
+        lfs: true
 
     - name: Checkout blog
       uses: actions/checkout@v2
@@ -33,15 +34,18 @@ jobs:
         repository: ${{ env.BLOG_REPO }}
         ref: ${{ env.BLOG_BRANCH }}
         path: ${{ env.BLOG_PATH }}
+        ssh-key: ${{ secrets.ACTION_DEPLOY_KEY }}
+        ssh-known-hosts: `ssh-keyscan github.com`
+        ssh-strict: false
+        persist-credentials: false
         submodules: true
+        lfs: true
+
     
     - name: Configuration environment
       env: 
         ACTION_DEPLOY_KEY: ${{ secrets.ACTION_DEPLOY_KEY }}
       run: |
-        mkdir -p ~/.ssh/
-        echo "$ACTION_DEPLOY_KEY" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
         ssh-keyscan github.com >> ~/.ssh/known_hosts
         git config --global user.name ${{ env.GIT_USER }}
         git config --global user.email ${{ env.GIT_EMAIL }}
