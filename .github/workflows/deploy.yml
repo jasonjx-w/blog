@@ -10,7 +10,7 @@ env:
   BLOG_REPO: jasonjx-w/blog
   BLOG_BRANCH: master
   BLOG_PATH: blog
-  DEPLOY_REPO: git@github.com:jasonjx-w/jasonjx-w.github.io.git
+  DEPLOY_REPO: jasonjx-w/jasonjx-w.github.io.git
   DEPLOY_BRANCH: master
   DEPLOY_PATH: deploy
 
@@ -43,9 +43,8 @@ jobs:
         echo "$ACTION_DEPLOY_KEY" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
         ssh-keyscan github.com >> ~/.ssh/known_hosts
-        git config --global user.name $GIT_USER
-        git config --global user.email $GIT_EMAIL
-        git clone git@github.com:jasonjx-w/jasonjx-w.github.io.git ${{ env.DEPLOY_PATH}}
+        git config --global user.name ${{ env.GIT_USER }}
+        git config --global user.email ${{ env.GIT_EMAIL }}
     
     - name: Deploy
       run: | 
@@ -56,7 +55,9 @@ jobs:
     - name: Commit deploy repo
       run: | 
         cd ${{ github.workspace }}/${{ env.DEPLOY_PATH }}
-        ls
         git add .
         git commit -m "rebuilding at `date`"
+
+        git config --global user.name ${{ env.GIT_USER }}
+        git config --global user.email ${{ env.GIT_EMAIL }}
         git push origin master
