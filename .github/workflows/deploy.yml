@@ -54,7 +54,10 @@ jobs:
         echo "and .. have"
         ls -al ..
         echo "ws is ${{ github.workspace }}"
-        echo "deploy path is ${{ env.DEPLOY_PATH }}"
+        echo "deploy path is ${{ github.workspace }}/${{ env.DEPLOY_PATH }}"
+        export ABS_DEPLOY_PATH=${{ github.workspace }}/${{ env.DEPLOY_PATH }}
+        echo "abs path is $ABS_DEPLOY_PATH"
+        ls $ABS_DEPLOY_PATH
         
         docker run \ 
         -v ${{ github.workspace }}/${{ env.DEPLOY_PATH }}:/srv/jekyll -v ${{ github.workspace }}/${{ env.DEPLOY_PATH }}/_site:/srv/jekyll/_site \ 
