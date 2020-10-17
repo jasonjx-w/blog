@@ -19,29 +19,29 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # - name: Checkout deploy repo
-    #   uses: actions/checkout@v2
-    #   with:
-    #     repository: ${{ env.DEPLOY_REPO }}
-    #     ref: ${{ env.DEPLOY_BRANCH }}
-    #     path: ${{ env.DEPLOY_PATH }}
-    #     ssh-key: ${{ secrets.ACTION_DEPLOY_KEY }}
-    #     ssh-strict: false
-    #     persist-credentials: false
-    #     submodules: true
+    - name: Checkout deploy repo
+      uses: actions/checkout@v2
+      with:
+        repository: ${{ env.DEPLOY_REPO }}
+        ref: ${{ env.DEPLOY_BRANCH }}
+        path: ${{ env.DEPLOY_PATH }}
+        ssh-key: ${{ secrets.SSH_PRIVATE_KEY }}
+        ssh-strict: false
+        persist-credentials: false
+        submodules: true
 
     - name: Checkout blog
       uses: actions/checkout@v2
       with:
         repository: ${{ env.BLOG_REPO }}
-        ref: ${{ env.BLOG_BRANCH }}
+        # ref: ${{ env.BLOG_BRANCH }}
         path: ${{ env.BLOG_PATH }}
-        ssh-key: ${{ secrets.ACTION_DEPLOY_KEY }}
+        ssh-key: ${{ secrets.SSH_PRIVATE_KEY }}
         submodules: true
     
     - name: Configuration environment
       env: 
-        ACTION_DEPLOY_KEY: ${{ secrets.ACTION_DEPLOY_KEY }}
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
       run: |
         ssh-keyscan github.com >> ~/.ssh/known_hosts
         git config --global user.name ${{ env.GIT_USER }}
