@@ -7,9 +7,8 @@ on:
 env:
   GIT_USER: jasonjx-w
   GIT_EMAIL: jasonjx.w@outlook.com
-
-  BLOG_PATH: blog
-  DEPLOY_PATH: deploy
+  CONTENT_PATH: blog/content
+  POST_PATH: post
 
 jobs:
   deploy:
@@ -17,30 +16,29 @@ jobs:
 
     steps:
 
-    - name: Checkout blog
+    - name: Checkout repo
       uses: actions/checkout@v2
       with:
-        path: ${{ env.BLOG_PATH }}
         ssh-key: ${{ secrets.SSH_PRIVATE_KEY }}
         submodules: true
     
-    - name: Configuration environment
-      env: 
-        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-      run: |
-        ssh-keyscan github.com >> ~/.ssh/known_hosts
-        git config --global user.name ${{ env.GIT_USER }}
-        git config --global user.email ${{ env.GIT_EMAIL }}
+    # - name: Configuration environment
+    #   env: 
+    #     SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+    #   run: |
+    #     ssh-keyscan github.com >> ~/.ssh/known_hosts
+    #     git config --global user.name ${{ env.GIT_USER }}
+    #     git config --global user.email ${{ env.GIT_EMAIL }}
     
     - name: Deploy
       run: | 
-        cp -u -p -r ${{ env.BLOG_PATH }}/content ${{ env.DEPLOY_PATH }}/_posts/
-        export ABS_DEPLOY_PATH=${{ github.workspace }}/${{ env.DEPLOY_PATH }}
+        cp -u -p -r ${{ env.CONTENT_PATH }} ${{ env.POST_PATH }}/_posts/
+        export ABS_DEPLOY_PATH=${{ github.workspace }}/${{ env.POST_PATH }}
         docker run -v $ABS_DEPLOY_PATH:/srv/jekyll jekyll/builder:latest /bin/bash -c "ls /srv/jekyll"
 
     - name: Commit deploy repo
       run: | 
-        cd ${{ github.workspace }}/${{ env.DEPLOY_PATH }}
+        cd ${{ github.workspace }}/${{ env.POST_PATH }}
         git add .
         git commit -m "rebuilding at `date`"
 
