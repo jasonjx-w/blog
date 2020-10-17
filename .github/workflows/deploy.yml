@@ -19,7 +19,7 @@ jobs:
       env: 
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
       run: | 
-        cp -r content/* post/_posts/
+        # cp -r content/* post/_posts/
         echo ${{ secrets.SSH_PRIVATE_KEY }}
 
         ssh-keyscan github.com >> ~/.ssh/known_hosts
