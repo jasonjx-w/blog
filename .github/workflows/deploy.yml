@@ -20,7 +20,9 @@ jobs:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
       run: | 
         cp -r content/* post/_posts/
-        cat ${{ secrets.SSH_PRIVATE_KEY }}
+        ls ~/.ssh/
+        # ${{ secrets.SSH_PRIVATE_KEY }} >> private.txt
+        # cat private.txt
 
         ssh-keyscan github.com >> ~/.ssh/known_hosts
         git config --global user.name "github-action"
