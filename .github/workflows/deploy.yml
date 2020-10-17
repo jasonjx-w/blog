@@ -7,11 +7,8 @@ on:
 env:
   GIT_USER: jasonjx-w
   GIT_EMAIL: jasonjx.w@outlook.com
-  BLOG_REPO: jasonjx-w/blog
-  BLOG_BRANCH: master
+
   BLOG_PATH: blog
-  DEPLOY_REPO: jasonjx-w/jasonjx-w.github.io.git
-  DEPLOY_BRANCH: master
   DEPLOY_PATH: deploy
 
 jobs:
@@ -19,20 +16,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout deploy repo
-      uses: actions/checkout@v2
-      with:
-        repository: ${{ env.DEPLOY_REPO }}
-        ref: ${{ env.DEPLOY_BRANCH }}
-        path: ${{ env.DEPLOY_PATH }}
-        ssh-key: ${{ secrets.SSH_PRIVATE_KEY }}
-        submodules: true
 
     - name: Checkout blog
       uses: actions/checkout@v2
       with:
-        repository: ${{ env.BLOG_REPO }}
-        ref: ${{ env.BLOG_BRANCH }}
         path: ${{ env.BLOG_PATH }}
         ssh-key: ${{ secrets.SSH_PRIVATE_KEY }}
         submodules: true
@@ -41,15 +28,13 @@ jobs:
       env: 
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
       run: |
-        ls ~/.ssh
-        cat ~/.ssh/id_rsa.pub 
-        #ssh-keyscan github.com >> ~/.ssh/known_hosts
+        ssh-keyscan github.com >> ~/.ssh/known_hosts
         git config --global user.name ${{ env.GIT_USER }}
         git config --global user.email ${{ env.GIT_EMAIL }}
     
     - name: Deploy
       run: | 
-        cp -u -p -r ${{ env.BLOG_PATH }}/* ${{ env.DEPLOY_PATH }}/_posts/
+        cp -u -p -r ${{ env.BLOG_PATH }}/content ${{ env.DEPLOY_PATH }}/_posts/
         export ABS_DEPLOY_PATH=${{ github.workspace }}/${{ env.DEPLOY_PATH }}
         docker run -v $ABS_DEPLOY_PATH:/srv/jekyll jekyll/builder:latest /bin/bash -c "ls /srv/jekyll"
 
