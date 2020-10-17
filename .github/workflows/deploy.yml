@@ -5,8 +5,8 @@ on:
     branches: [ master ]
 
 env:
-  GIT_USER: jasonjx-w
-  GIT_EMAIL: jasonjx.w@outlook.com
+  USER: "jason"
+  EMAIL: "jasonjx.w@outlook.com"
   CONTENT_PATH: content
   POST_PATH: post
 
@@ -16,7 +16,7 @@ jobs:
 
     steps:
 
-    - name: Checkout repo
+    - name: Checkout
       uses: actions/checkout@v2
       with:
         ssh-key: ${{ secrets.SSH_PRIVATE_KEY }}
@@ -35,13 +35,9 @@ jobs:
         cp -u -p -r ${{ env.CONTENT_PATH }} ${{ env.POST_PATH }}/_posts/
         export ABS_DEPLOY_PATH=${{ github.workspace }}/${{ env.POST_PATH }}
         docker run -v $ABS_DEPLOY_PATH:/srv/jekyll jekyll/builder:latest /bin/bash -c "ls /srv/jekyll"
-
-    - name: Commit deploy repo
-      run: | 
         cd ${{ github.workspace }}/${{ env.POST_PATH }}
         git add .
         git commit -m "rebuilding at `date`"
-
-        git config --global user.name ${{ env.GIT_USER }}
-        git config --global user.email ${{ env.GIT_EMAIL }}
+        git config user.name ${{ env.USER }}
+        git config user.email ${{ env.EMAIL }}
         git push origin master
