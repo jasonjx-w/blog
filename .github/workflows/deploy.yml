@@ -26,15 +26,13 @@ jobs:
         ref: ${{ env.DEPLOY_BRANCH }}
         path: ${{ env.DEPLOY_PATH }}
         ssh-key: ${{ secrets.SSH_PRIVATE_KEY }}
-        ssh-strict: false
-        persist-credentials: false
         submodules: true
 
     - name: Checkout blog
       uses: actions/checkout@v2
       with:
         repository: ${{ env.BLOG_REPO }}
-        # ref: ${{ env.BLOG_BRANCH }}
+        ref: ${{ env.BLOG_BRANCH }}
         path: ${{ env.BLOG_PATH }}
         ssh-key: ${{ secrets.SSH_PRIVATE_KEY }}
         submodules: true
@@ -43,7 +41,9 @@ jobs:
       env: 
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
       run: |
-        ssh-keyscan github.com >> ~/.ssh/known_hosts
+        ls ~/.ssh
+        cat ~/.ssh/id_rsa.pub 
+        #ssh-keyscan github.com >> ~/.ssh/known_hosts
         git config --global user.name ${{ env.GIT_USER }}
         git config --global user.email ${{ env.GIT_EMAIL }}
     
