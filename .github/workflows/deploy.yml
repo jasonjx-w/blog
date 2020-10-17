@@ -36,6 +36,7 @@ jobs:
         repository: ${{ env.BLOG_REPO }}
         ref: ${{ env.BLOG_BRANCH }}
         path: ${{ env.BLOG_PATH }}
+        ssh-key: ${{ secrets.ACTION_DEPLOY_KEY }}
         submodules: true
     
     - name: Configuration environment
