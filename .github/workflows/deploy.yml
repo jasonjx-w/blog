@@ -19,9 +19,6 @@ jobs:
       env: 
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
       run: | 
-        # ${{ secrets.SSH_PRIVATE_KEY }} >> private.txt
-        # cat private.txt
-
         ssh-keyscan github.com >> ~/.ssh/known_hosts
         git config --global user.name "github-action"
         git config --global user.email "action@github.com"
