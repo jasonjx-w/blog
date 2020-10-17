@@ -7,37 +7,30 @@ on:
 env:
   USER: "jason"
   EMAIL: "jasonjx.w@outlook.com"
-  CONTENT_PATH: content
-  POST_PATH: post
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-
     - name: Checkout
       uses: actions/checkout@v2
       with:
         ssh-key: ${{ secrets.SSH_PRIVATE_KEY }}
         submodules: true
     
-    # - name: Configuration environment
-    #   env: 
-    #     SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-    #   run: |
-    #     ssh-keyscan github.com >> ~/.ssh/known_hosts
-    #     git config --global user.name ${{ env.GIT_USER }}
-    #     git config --global user.email ${{ env.GIT_EMAIL }}
-    
     - name: Deploy
+      env: 
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
       run: | 
-        cp -u -p -r ${{ env.CONTENT_PATH }} ${{ env.POST_PATH }}/_posts/
-        export ABS_DEPLOY_PATH=${{ github.workspace }}/${{ env.POST_PATH }}
-        docker run -v $ABS_DEPLOY_PATH:/srv/jekyll jekyll/builder:latest /bin/bash -c "ls /srv/jekyll"
-        cd ${{ github.workspace }}/${{ env.POST_PATH }}
-        git add .
-        git commit -m "rebuilding at `date`"
+        cp -r content/* post/_posts/
+
+        ssh-keyscan github.com >> ~/.ssh/known_hosts
         git config user.name ${{ env.USER }}
         git config user.email ${{ env.EMAIL }}
+        cd post
+        git add .
+        git commit -m "rebuilding at `date`"
         git push origin master
+
+        docker run -v post:/srv/jekyll jekyll/builder:latest /bin/bash -c "ls /srv/jekyll"
