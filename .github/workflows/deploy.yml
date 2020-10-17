@@ -20,10 +20,11 @@ jobs:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
       run: | 
         cp -r content/* post/_posts/
+        ls post/_posts/
 
         ssh-keyscan github.com >> ~/.ssh/known_hosts
-        git config user.name "github action"
-        git config user.email "github.com"
+        git config --global user.name "github-action"
+        git config --global user.email "action@github.com"
         cd post
         git add .
         git commit -m "rebuilding at `date`"
