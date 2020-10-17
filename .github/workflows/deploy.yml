@@ -19,7 +19,6 @@ jobs:
       env: 
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
       run: | 
-        # cp -r content/* post/_posts/
         # ${{ secrets.SSH_PRIVATE_KEY }} >> private.txt
         # cat private.txt
 
