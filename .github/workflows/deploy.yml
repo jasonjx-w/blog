@@ -19,16 +19,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout deploy repo
-      uses: actions/checkout@v2
-      with:
-        repository: ${{ env.DEPLOY_REPO }}
-        ref: ${{ env.DEPLOY_BRANCH }}
-        path: ${{ env.DEPLOY_PATH }}
-        ssh-key: ${{ secrets.ACTION_DEPLOY_KEY }}
-        ssh-strict: false
-        persist-credentials: false
-        submodules: true
+    # - name: Checkout deploy repo
+    #   uses: actions/checkout@v2
+    #   with:
+    #     repository: ${{ env.DEPLOY_REPO }}
+    #     ref: ${{ env.DEPLOY_BRANCH }}
+    #     path: ${{ env.DEPLOY_PATH }}
+    #     ssh-key: ${{ secrets.ACTION_DEPLOY_KEY }}
+    #     ssh-strict: false
+    #     persist-credentials: false
+    #     submodules: true
 
     - name: Checkout blog
       uses: actions/checkout@v2
