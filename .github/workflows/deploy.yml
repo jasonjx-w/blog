@@ -7,7 +7,7 @@ on:
 env:
   GIT_USER: jasonjx-w
   GIT_EMAIL: jasonjx.w@outlook.com
-  CONTENT_PATH: blog/content
+  CONTENT_PATH: content
   POST_PATH: post
 
 jobs:
