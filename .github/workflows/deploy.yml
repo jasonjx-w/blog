@@ -4,10 +4,6 @@ on:
   push:
     branches: [ master ]
 
-env:
-  USER: "jason"
-  EMAIL: "jasonjx.w@outlook.com"
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -26,8 +22,8 @@ jobs:
         cp -r content/* post/_posts/
 
         ssh-keyscan github.com >> ~/.ssh/known_hosts
-        git config user.name ${{ env.USER }}
-        git config user.email ${{ env.EMAIL }}
+        git config user.name "github action"
+        git config user.email "github.com"
         cd post
         git add .
         git commit -m "rebuilding at `date`"
