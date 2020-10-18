@@ -19,12 +19,12 @@ jobs:
       env: 
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
       run: | 
-        ssh-keyscan github.com >> ~/.ssh/known_hosts
-        git config --global user.name "github-action"
-        git config --global user.email "action@github.com"
-        cd post
-        git add .
-        git commit -m "rebuilding at `date`"
-        git push origin master
+        # ssh-keyscan github.com >> ~/.ssh/known_hosts
+        # git config --global user.name "github-action"
+        # git config --global user.email "action@github.com"
+        # cd post
+        # git add .
+        # git commit -m "rebuilding at `date`"
+        # git push origin master
 
-        docker run -v post:/srv/jekyll jekyll/builder:latest /bin/bash -c "ls /srv/jekyll"
+        # docker run -v post:/srv/jekyll jekyll/builder:latest /bin/bash -c "ls /srv/jekyll"
