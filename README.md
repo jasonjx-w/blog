@@ -1,5 +1,8 @@
 # blog
 
+* content中存放blog内容文件
+* ref存放参考资料
+* 其他文件放在.路径下
 
 # CHANGELOG
 
