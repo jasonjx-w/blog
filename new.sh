@@ -31,7 +31,7 @@ fi
 
 cat > $FILE <<EOF
 ---
-layout:      post   # 指定使用的模板文件，“_layout” 目录下的模板文件名决定变量名
+layout:      article   # 指定使用的模板文件，“_layout” 目录下的模板文件名决定变量名
 title:       $TITLE
 date:        $DATE
 category:    blog   # 文章的类别
