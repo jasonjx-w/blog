@@ -1,0 +1,15 @@
+\contentsline {section}{\numberline {1}算法基础}{2}{section.1}
+\contentsline {section}{\numberline {2}线性结构(linear list)}{2}{section.2}
+\contentsline {subsection}{\numberline {2.1}数组和向量(array and vector)}{2}{subsection.2.1}
+\contentsline {subsection}{\numberline {2.2}表(list)}{2}{subsection.2.2}
+\contentsline {subsection}{\numberline {2.3}栈和队列(stack and queue)}{2}{subsection.2.3}
+\contentsline {subsection}{\numberline {2.4}稀疏矩阵}{2}{subsection.2.4}
+\contentsline {subsection}{\numberline {2.5}串}{2}{subsection.2.5}
+\contentsline {section}{\numberline {3}树}{2}{section.3}
+\contentsline {subsection}{\numberline {3.1}二叉树}{2}{subsection.3.1}
+\contentsline {subsection}{\numberline {3.2}堆}{2}{subsection.3.2}
+\contentsline {subsection}{\numberline {3.3}huffman树}{2}{subsection.3.3}
+\contentsline {section}{\numberline {4}图}{2}{section.4}
+\contentsline {section}{\numberline {5}查找或搜索}{2}{section.5}
+\contentsline {section}{\numberline {6}排序}{2}{section.6}
+\contentsline {section}{\numberline {7}索引和散列(hashing)}{2}{section.7}

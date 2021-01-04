@@ -1,0 +1,44 @@
+\contentsline {section}{\numberline {1}算法基础}{3}{section.1}
+\contentsline {subsection}{\numberline {1.1}数据(data),数据元素(element),数据项(item)}{3}{subsection.1.1}
+\contentsline {subsection}{\numberline {1.2}逻辑结构\&物理结构}{3}{subsection.1.2}
+\contentsline {subsection}{\numberline {1.3}算法(algorithm)}{3}{subsection.1.3}
+\contentsline {subsection}{\numberline {1.4}算法复杂度(complexity)}{4}{subsection.1.4}
+\contentsline {section}{\numberline {2}线性表(linear list)}{5}{section.2}
+\contentsline {subsection}{\numberline {2.1}顺序表(sequential list)}{5}{subsection.2.1}
+\contentsline {subsection}{\numberline {2.2}链表(linked list)}{5}{subsection.2.2}
+\contentsline {subsubsection}{\numberline {2.2.1}循环链表(circular linked lists)}{5}{subsubsection.2.2.1}
+\contentsline {subsubsection}{\numberline {2.2.2}双链表(doubly list)}{5}{subsubsection.2.2.2}
+\contentsline {subsubsection}{\numberline {2.2.3}双循环链表(doubly linked list)}{6}{subsubsection.2.2.3}
+\contentsline {subsection}{\numberline {2.3}三链表}{6}{subsection.2.3}
+\contentsline {subsection}{\numberline {2.4}相关问题}{6}{subsection.2.4}
+\contentsline {subsection}{\numberline {2.5}栈(stack)}{7}{subsection.2.5}
+\contentsline {subsubsection}{\numberline {2.5.1}存储方式}{7}{subsubsection.2.5.1}
+\contentsline {subsubsection}{\numberline {2.5.2}基础操作}{7}{subsubsection.2.5.2}
+\contentsline {subsubsection}{\numberline {2.5.3}应用}{7}{subsubsection.2.5.3}
+\contentsline {subsection}{\numberline {2.6}队列(queue)}{8}{subsection.2.6}
+\contentsline {subsection}{\numberline {2.7}串}{8}{subsection.2.7}
+\contentsline {subsection}{\numberline {2.8}数组}{8}{subsection.2.8}
+\contentsline {subsection}{\numberline {2.9}广义表}{8}{subsection.2.9}
+\contentsline {subsection}{\numberline {2.10}hash表}{8}{subsection.2.10}
+\contentsline {section}{\numberline {3}树}{9}{section.3}
+\contentsline {subsection}{\numberline {3.1}二叉树}{9}{subsection.3.1}
+\contentsline {subsubsection}{\numberline {3.1.1}哈夫曼树基本概念}{9}{subsubsection.3.1.1}
+\contentsline {subsubsection}{\numberline {3.1.2}哈夫曼树构建方法}{9}{subsubsection.3.1.2}
+\contentsline {subsubsection}{\numberline {3.1.3}哈夫曼编码}{9}{subsubsection.3.1.3}
+\contentsline {subsubsection}{\numberline {3.1.4}哈夫曼树应用}{9}{subsubsection.3.1.4}
+\contentsline {subsection}{\numberline {3.2}堆}{9}{subsection.3.2}
+\contentsline {subsubsection}{\numberline {3.2.1}堆的概念}{9}{subsubsection.3.2.1}
+\contentsline {subsubsection}{\numberline {3.2.2}堆的创建}{9}{subsubsection.3.2.2}
+\contentsline {subsubsection}{\numberline {3.2.3}堆的插入和删除}{9}{subsubsection.3.2.3}
+\contentsline {subsubsection}{\numberline {3.2.4}应用}{9}{subsubsection.3.2.4}
+\contentsline {subsection}{\numberline {3.3}平衡查找树}{10}{subsection.3.3}
+\contentsline {subsection}{\numberline {3.4}多路查找树}{10}{subsection.3.4}
+\contentsline {subsection}{\numberline {3.5}堆(大,小顶堆)}{10}{subsection.3.5}
+\contentsline {subsection}{\numberline {3.6}字典树}{10}{subsection.3.6}
+\contentsline {subsection}{\numberline {3.7}并查集}{10}{subsection.3.7}
+\contentsline {section}{\numberline {4}图}{11}{section.4}
+\contentsline {section}{\numberline {5}查找}{12}{section.5}
+\contentsline {section}{\numberline {6}排序}{13}{section.6}
+\contentsline {subsection}{\numberline {6.1}稳定与不稳定}{13}{subsection.6.1}
+\contentsline {subsection}{\numberline {6.2}内部排序和外部排序}{13}{subsection.6.2}
+\contentsline {subsection}{\numberline {6.3}插入排序}{13}{subsection.6.3}

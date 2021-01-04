@@ -1,0 +1,110 @@
+\documentclass{ctexart}
+\usepackage{graphicx}
+\usepackage{subfigure}
+
+
+\begin{document}
+\title{关于光源}
+\author{ }
+\maketitle
+
+
+光源直接影响图像的质量,和至少30\%的应用效果.
+\section{光源的好坏}
+\begin{itemize}
+  \item \emph{对比度}:光源最重要的任务是:使待观察区和不需观察区之间产生最大对比度.即,好的光源应该突出物体的\emph{待检测特征},忽略无用的背景或其他不关注的部分.
+  \item \emph{亮度}:倾向于选择更亮的光源.如果光源不够亮:1)图像中会出现噪声,同时对比度不足;2)光源不够,需要使用大光圈,降低景深;3) 亮度不足,环境光等随机光会影响系统.
+  \item \emph{鲁棒性}:光源对部件位置的敏感度应该尽可能的低.即,光源的位置不应该影响图像最终结果.反之,光源方向性很强,则很容易形成高亮区域或镜面反射区域.
+\end{itemize}
+
+
+\newpage
+\section{光源的控制}
+对于光源的控制,归结为一点就是如何控制光源反射(使用背光除外).以下几点需要明确:
+\begin{itemize}
+  \item 光线可预测.光线可能被吸收或反射.受部件颜色或材质影响,光线可能被全部\footnote{如黑金属材质}或部分吸收\footnote{部件经照亮后颜色发生变化或亮度发生变化,即是光线被部分吸收.},除此之
+      外的光将会被反射,此时入射角$=$反射角.
+  \item 物体表面特性影响反射.每种物体表面的特性不同,如颜色,纹理,物体形状等,均会影响光线的反射,因此需要根据物体的不同材质和性质,分析光线问题.
+  \item 控制反射.涉及光源设计时,最重要的原则就是:控制反射,以使得物体显现,使物体待检测特性更好地反射到镜头中.
+\end{itemize}
+
+影响反射效果的因素:
+\begin{enumerate}
+    \item 光源的位置:为了凸显物体特征,可以通过预测光线在物体表面的反射方式,以逆推确定光源位置.
+    \item 表面纹理:物体纹理会直接影响光的反射情况和吸收情况.
+    \item 光源的均匀性:光源本身射出的光如果不均匀,会造成不均匀的反射.视野中的光应该是均匀的,没有亮部或暗部.均匀的光源可以补偿物体表面的角度变化.
+\end{enumerate}
+
+
+\newpage
+\section{照明方式}
+    \begin{figure}[!ht]
+    \centering
+    \subfigure[直接照明]
+    {
+        \begin{minipage}[t]{0.35\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{direct.jpg}
+        %\caption{直接照明}
+        \end{minipage}%
+    }%
+    \subfigure[暗场照明]
+    {
+        \begin{minipage}[t]{0.3\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{darkfeild.jpg}
+        %\caption{暗场照明}
+        \end{minipage}%
+    }%
+    \subfigure[背光照明]
+    {
+        \begin{minipage}[t]{0.3\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{tongzhou.jpg}
+        %\caption{暗场照明}
+        \end{minipage}%
+    }%
+
+    \subfigure[同轴照明]
+    {
+        \begin{minipage}[t]{0.35\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{beiguang.jpg}
+        %\caption{暗场照明}
+        \end{minipage}%
+    }%
+    \subfigure[漫射照明]
+    {
+        \begin{minipage}[t]{0.35\linewidth}
+        \centering
+        \includegraphics[width=\linewidth]{manshe.jpg}
+        %\caption{暗场照明}
+        \end{minipage}%
+    }%
+
+
+    \centering
+    \caption{照明方式}
+    %\label{line-structure-light}
+    \end{figure}
+
+\begin{itemize}
+  \item \emph{直接照明}即是最为通用的照明方式.当需要得到高对比度物体图像的时候,这种类型的光很有效;但会引起镜面反光.通常采用的光源是
+      \emph{环状}或\emph{照明},比如安装在镜头附近的环灯.
+  \item \emph{暗场照明}是相对于物体表面提供\emph{低角度}照明,暗场照明应用于对表面部分有突起的部分的照明或表面纹理变化的照明.
+  \item \emph{背光照明}从物体背面射过来均匀视场的光.通过相机可以看到物面的侧面轮廓。背光照明常用于测量物休的尺寸和定物体的方向.
+  \item \emph{同轴照明}采用特殊的分光镜.这种类型的光源对检测高反射的物体特别有帮助,还适合受周围环境产生阴影的影响,检测面积不明显的物体.
+  \item \emph{漫射照明}应用于物体表面的反射性或者表面有复杂的角度.连续漫反射照明应用半球形的均匀照明以减小影子及镜面反射,可以达到170立体角范围的均匀照明.
+\end{itemize}
+
+\section{光源的选择}
+选择光源时,应考虑以下因素.
+\begin{itemize}
+  \item 光谱特性:如光的颜色,色温,红外线等.另外还需考虑相机CCD的频谱响应.通常用相反色温的颜色照射,可以达到最高级别的对比度,冷色照射暖色物体,其图像变暗;照射其它物体,则变亮.
+  \item 发光效率:降低功耗,减少能源浪费.
+  \item 寿命:光源随发光时间的增长,亮度会随之降低.通常LED光源可以使用超过100000小时.
+  \item 费用.
+\end{itemize}
+
+
+\end{document}

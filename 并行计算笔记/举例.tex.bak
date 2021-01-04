@@ -1,0 +1,153 @@
+\documentclass{ctexart}
+\usepackage{graphicx}
+
+
+\begin{document}
+
+\section{并行举例}
+
+\subsection{遍历像素}
+
+\begin{itemize}
+  \item 假设对于每个像素的处理与邻域无关
+  \item 顺序执行代码每次只计算一个像素
+\end{itemize} 
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.2\linewidth]{xiangsuchuli.jpg}\\
+  \caption{遍历像素}\label{bianliyuansu}
+\end{figure} 
+代码如下：
+\begin{verbatim}
+    for( int i=0; i<cols; ++i)
+    {
+        for(int j=0; j<rows; ++j)
+        {
+            element(i,j) = function(i,j);
+        }
+    }
+\end{verbatim}
+
+\paragraph{并行改造方案1}
+\begin{itemize}
+  \item 将任务分块，如：子数组划分(如task1,task2...)
+  \item 不同子数组的处理不需要通信
+\end{itemize} 
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.25\linewidth]{bingxingjiejuefangan1.jpg}\\
+  \caption{并行改造方案1}\label{bingxingjiejuefangan1}
+\end{figure}
+
+代码如下：
+\begin{verbatim}
+  for( int i = task_start; i < task_end; ++i)
+  {
+    for(int j=0; j<rows; ++j)
+    {
+      element(i,j) = function(i,j);
+    }
+  }
+\end{verbatim}
+
+\textbf{如上例，在逻辑上将任务划分为多个小任务并行处理，这些小任务之间没有通信或通信较少，并且不需要任何调度，称之为"尬并行""易并行""尴尬并行"（embarrasingly parrallel）}
+
+优劣：
+\begin{itemize}
+  \item 人工分配任务，操作简单
+  \item 可迅速实现对现有顺序代码的并行改造
+  \item 粒度较粗，容易引起负载不均衡
+\end{itemize}
+
+\paragraph{并行改造方案2}
+\begin{itemize}
+  \item 主线程维护线程池
+  \item 主线程分配任务
+  \item 主线程收集子线程的处理结果
+  \item 子线程从主线程领取任务
+  \item 子线程运算，将结果返回给主线程
+\end{itemize} 
+
+代码举例：
+\begin{verbatim}
+  int pid = fork() // 新建线程
+  if( pid != 0)    // 对于主线程
+  {
+    SendTaskToThreads();
+    ReceiverResultFromThreads();
+  }
+  else             // 对于子线程
+  {
+    ReceiveTaskFromMaster();
+    DoTask();
+    SendResultToMaster();
+  }
+\end{verbatim}
+优劣：
+\begin{itemize}
+  \item 自动分配任务
+  \item 操作较复杂，不适合对现有代码进行并行改造的情景。
+  \item 粒度较细，负载较均衡
+  \item 有额外的运算支出，如通信、任务分配等
+\end{itemize}
+
+
+\subsection{计算PI}
+
+\begin{itemize}
+  \item 生成随机点
+  \item 用落在圆内点和所有点的个数近似圆面积和方形面积
+  \item 确定PI值
+\end{itemize}
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.5\linewidth]{jisuanpi.jpg}\\
+  \caption{PI的计算}\label{jisuanpi1}
+\end{figure}
+
+代码举例：
+\begin{verbatim}
+  int total_point_number = 10000;
+  int circle_point_number = 0;
+  
+  for( int i=0; i < total_point_number; ++i)
+  {
+    int x = random(0,1);
+    int y = random(0,1);
+    if( x*x + y*y < r*r)
+    {
+      circle_point_number++;
+    }
+  }
+  
+  double PI = 4.0*circle_point_number/total_point_number;
+\end{verbatim}
+
+\begin{itemize}
+  \item 增加随机点个数，提高Pi的运算精度
+  \item 循环导致计算量巨大
+\end{itemize}
+
+\paragraph{计算Pi并行改造1}
+\begin{itemize}
+  \item 如案例1，并行改造1的思路
+  \item 将总任务分成多个子任务
+  \item 最后将所有子任务的结果将加
+\end{itemize}
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.25\linewidth]{jisuanpibingxing.jpg}\\
+  \caption{PI的并行改造}\label{jisuanpibingxing}
+\end{figure}
+
+\paragraph{计算Pi并行改造2}
+
+
+
+
+
+
+
+\end{document}

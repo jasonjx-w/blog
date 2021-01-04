@@ -1,0 +1,45 @@
+\documentclass{ctexart}
+\usepackage{graphicx}
+\usepackage[colorlinks,linkcolor=black,anchorcolor=black,citecolor=black]{hyperref}
+
+\begin{document}
+
+\title{线性方程组(Simultaneous Linear Equations)}
+\maketitle
+
+
+\paragraph{线性方程}
+包含未知数$x_1,x_2...x_n$的一个线性方程是形如
+$$a_1x_1+a_2x_2+...a_nx_n=b$$
+的方程.其中$b$和系数$a_1,..a_n$是实数或复数,通常已知,$n$是任意正整数,且每一项的次数都是1.
+
+\paragraph{线性方程组}
+由一个或多个包含相同变量$x_1,x_2...x_n$的线性方程组成.
+
+线性方程组的一组\emph{解}是一组数$(s_1,s_2,...s_n)$代替$x_1,x_2...x_n$后所有方程均能成立.
+
+线性方程组所有可能的解的集合称为\emph{解集}.两个具有相同解集的线性方程组称为\emph{等价}.
+
+\paragraph{系数矩阵}将一个线性方程组的所有系数用\emph{矩阵}表示.
+\paragraph{增广矩阵}在系数矩阵的最右侧添加一列,这一列是线性方程组右边的常数.
+
+\paragraph{初等行变换} 
+\begin{itemize}
+	\item 倍加变换:某一行乘某倍数与另一行加和.
+	\item 对换变换:两行互换位置.
+	\item 倍乘变换:某一行乘某倍数.
+\end{itemize}
+
+\paragraph{行等价}如果某矩阵经过一系列初等行变换可以转换成另一个矩阵,则称两个矩阵\emph{行等价}.
+
+两个行等价的增广矩阵,有相同的解集.
+	
+
+
+
+
+
+\bibliographystyle{plain}
+\bibliography{refs.bib}
+	
+\end{document}

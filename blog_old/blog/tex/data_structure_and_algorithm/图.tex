@@ -1,0 +1,57 @@
+\documentclass{ctexart}
+\usepackage{graphicx}
+\usepackage[colorlinks,linkcolor=black,anchorcolor=black,citecolor=black]{hyperref}
+
+\begin{document}
+	
+完成\newpage
+\section{基本概念}
+\begin{itemize}
+\item \emph{有向图(directed graph)}和\emph{无向图(undirected graph)}.
+\item \emph{完全图},任意两个顶点(vertex)之间都有边的图.无向图有$\frac{n(n-1)}{2}$条边,有向图有$n(n-1)$ 条边.
+\item \emph{权(weight)},边上附加的权重系数.
+\item \emph{邻接顶点(adjacent vertex)}.
+\item \emph{子图(subgraph)}.
+\item \emph{顶点的度(degree)}
+\item \emph{路径(path)}和\emph{路径长度(path length)}.
+\item \emph{简单路径},路径上各顶点无重复(无回环出现),成为简单路径.
+\item \emph{回环(cycle)}.
+\item \emph{连通(connected)},\emph{连通图(connected graph)}和\emph{连通分量(connected component)}.若顶点$v_1$和$v_2$有路径,则称连通.若图中任意两点连通,则称连通图.非连通图的最大连通子图称为连通分量.
+\item \emph{强连通图}和\emph{强连通分量(strongly connected digraph)},有向图中,任意两点均存在路径,则称此图为强连通图.非强连通图的最大强连通子图叫做强连通分量.
+\item \emph{生成树(spanning tree)} 包含图中所有顶点,且有尽可能少的边.
+\end{itemize}
+\newpage
+\section{图的存储和表示}
+图常用的存储方法有三种,邻接矩阵,邻接表,邻接多重表.
+
+\subsection{邻接矩阵}
+邻接矩阵是用于表示各个顶点之间关系的矩阵.
+$$
+E_{ij}=
+\begin{cases}
+1 & if\ (i,j) \in E\ or <i,j> \in E \\
+0 & else
+\end{cases}
+$$
+\subsection{邻接表}
+将与某顶点相接的顶点用链表表示,也即将邻接矩阵中非零元素用链表链接.
+\subsection{邻接多重表}
+在邻接表的基础之上,增加几个域.
+\newpage
+\section{图的遍历和连通}
+可分为深度优先搜索(DFS,depth first search)和广度优先搜索(BFS,breadth first search).
+\subsection{深度优先搜索}
+\subsection{广度优先搜索}
+\subsection{最小生成树}
+一个连通图的生成树是原图的极小连通子图,包含原图中所有顶点,且有尽可能少的边.
+\paragraph{生成树的构造}
+kruskal prim
+\subsection{最短路径}
+\subsection{活动网络}
+
+
+
+\bibliographystyle{plain}
+\bibliography{refs.bib}
+	
+\end{document}

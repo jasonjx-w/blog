@@ -1,0 +1,13 @@
+资料：
+1. opencl c 2.0 specification document
+2. the opencl 2.0 extension
+3. 《GPGPU 编程技术   从GLSL CUDA 到OPENCL》
+4. 《OPENCL编程导论》仰
+5. 《OPENCL 编程原理、分析和应用》刘志文
+
+
+The OpenCL Specification
+Version: 2.0
+Document Revision: 29
+Khronos OpenCL Working Group
+Editors: Lee Howes and Aaftab Munshi

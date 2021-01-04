@@ -1,0 +1,292 @@
+\documentclass{ctexart}
+\usepackage{graphicx}
+\usepackage[colorlinks,linkcolor=black,anchorcolor=black,citecolor=black]{hyperref}
+
+\begin{document}
+	
+\title{CMake专题}
+\author{}
+\maketitle
+\section{简介}
+不同开发平台所使用的make工具并不一样.目前常用的有多种make工具,如GNU Make,qmake,MS nmake等.不同make工具语句标准不一样,如果想要跨平台的话,必须要重写Makefile.
+为实现跨平台编译,可以使用CMake语句描述编译过程,配置编译所需环境.CMake会针对不同平台自动生成Makefile.
+CMake对编译过程的描述语句写在CMakeList.txt文件中.CMake根据用户对编译过程的描述和当前平台,生成本地化的Makefile或工程文件.比如可以用使用CMake生成适用于Unix的Makefile或适用于Windows的Visual Studio.sln.
+至此,跨平台编译只需要:\\
+1)平台上安装有CMake工具,\\
+2)工程源码,和\\
+3)随源码附带CMakeLists.txt 文件即可.
+\section{工作流程}
+\begin{itemize}
+\item 编写CMakeLists.txt
+\item 执行"cmake \{dir\}"或"ccmake \{dir\}" 生成Makefile.\footnote{ccmake有用户界面,而cmake 没有.\{dir\}是CMakeLists.txt的路径}
+\item 使用make命令,编译Makefile.
+\end{itemize}
+
+\section{CMakeLists.txt的编写}
+CMakeLists.txt语法简单.
+\begin{enumerate}
+\item 命令不区分大小写.
+\item \#表示注释
+\item 命令由命令名称,括号和参数组成.
+\end{enumerate}
+\subsection{最基本的命令}
+\paragraph{代码举例}
+比如CMakeLists.txt可以写如下命令:
+\begin{verbatim}
+#指定所需要cmake的最低版本.
+cmake_minium_required(VERSION 2.8)# 指定当前工程的名称
+project(DEMO_NAME)
+# 将main.cpp,编译成一个可执行文件DEMO.
+add_executable(DEMO main.cpp)
+\end{verbatim}
+随后,使用cmake命令.\footnote{cmake后接CMakeLists.txt所在路径,cmake 会将Makefile 输出到当前路径.}
+之后再使用make工具进行编译,生成可执行文件.
+\subsection{aux\_source\_directory命令}
+当项目工程中包含多个源文件时,需要将所有的源文件添加至命令:
+\begin{verbatim}
+add_executable()
+\end{verbatim}
+中,以生成可执行文件.手动操作较为繁琐.可以使用命令:
+\begin{verbatim}
+aux_source_directory()
+\end{verbatim}
+aux\_source\_directory(. DIR\_SRCS)会将当前文件夹内源文件收集起来,赋值给DIR\_SRCS变量.
+之后调用add\_executable(DEMO \$\{DIR\_SRCS\})生成可执行文件\\DEMO,即可.
+\subsection{当工程中出现多个目录}
+当一个工程中的源码出现在多个目录(子目录或其他路径),需要在每个子目录中编写一个CMakeLists.txt. 并且,需要先将子目录中的源码编译成静态库,方便根目录下程序调用.
+\subparagraph{根目录中}的CMakeLists.txt 需要添加以下内容:
+\begin{itemize}
+\item add\_subdirectory(文件夹名) 注明当前工程下有子目录,该子目录下的CMakeLists.txt 也会被处理.
+\item target\_link\_libraries(工程名\ 子模块名) 注明该工程需要连接一个子目录下的链接库.
+\end{itemize}
+另外,上述target\_link\_libraries()命令需要在add\_executable()命令后.
+\subparagraph{而子目录中}的CMakeLists.txt需要以下内容,以生成静态库.
+\begin{itemize}
+\item aux\_source\_directory(. DIR\_LIB\_SRCS)
+\item add\_library (SubModule \$\{DIR\_LIB\_SRCS\}) SubModule 是子模块名.
+\end{itemize}
+子目录中也应至少含有main.cpp文件.
+\paragraph{代码举例}
+\subparagraph{根目录下}
+具体来说根目录下CMakeLists.txt可以是:
+\begin{verbatim}
+#指定运行此CMakeLists.txt所需CMake最低版本.
+cmake_minium_required(VERSION 2.8)# 指定当前工程的名称
+project(DEMOO_NAME)
+#将main.cpp,编译成一个可执行文件DEMO.
+add_executable(DEMO main.cpp)# 注明子目录
+add_subdirectory(sub_folder)
+#链接库文件
+target_link_libraries(DEMO Sub_Module)#Sub_Module是子模块名
+\end{verbatim}
+\subparagraph{子目录下}CMakeLists.txt文件可以是:
+\begin{verbatim}
+#收集当前文件夹(.)中的源文件,赋值给变量source.
+aux_source_directory(. source)# 生成库文件.
+add_library(Sub_Module ${source}) # Sub_Module是子模块名
+\end{verbatim}
+\emph{add\_library()命令可以将文件编译为静态库文件.}
+\subsection{其他自定义编译选项}
+当需要在cmake阶段,让用户选择是否链接某些库可以用option()命令.结合if()-endif命令,控制编译选项.
+\paragraph{代码举例}
+\begin{verbatim}
+#CMake 最低版本号要求
+cmake_minimum_required (VERSION 2.8)# 项目信息
+project (DEMO)
+#加入一个配置头文件，用于处理 CMake 对源码的设置
+configure_file (
+"${PROJECT_SOURCE_DIR}/config.h.in"
+"${PROJECT_BINARY_DIR}/config.h"
+)# 是否使用自己的 OptionalFunctions 库
+option (USE_OPTIONAL_FUNCTIONS
+"Use provided optional functions implementation" ON)
+#是否加入 OptionalFunctions 库
+if (USE_OPTIONAL_FUNCTIONS)#指定头文件所在文件夹.
+include_directories (
+"${PROJECT_SOURCE_DIR}/optionalfunction")
+#指定子目录
+add_subdirectory (optionalfunction)#将子模块名(链接库)增加到${EXTRA_LIBS}中.
+set (EXTRA_LIBS ${EXTRA_LIBS} OptionalFunctions)
+endif (USE_OPTIONAL_FUNCTIONS)
+#查找当前目录下的所有源文件,并将名称保存到 DIR_SRCS 变量
+aux_source_directory(. DIR_SRCS)# 指定生成目标
+add_executable(DEMO ${DIR_SRCS})
+# 链接(link)
+target_link_libraries (DEMO ${EXTRA_LIBS})
+\end{verbatim}
+\subparagraph{说明}
+通过上述代码可以选择是否使用OptionalFunctions库.
+并且,工程代码(main.cpp)中,也需要使用\#ifdef-\#endif控制头文件的引用,代码的调用等.
+上述CMake代码中所涉及的config.h和config.h.in是CMake的预定义参数,只需要编写config.h.in 即可,而conffig.h由CMake自动生成.
+\subparagraph{编写config.h.in}
+需要在config.h.in中指定待选择项,代码样例如下:
+\begin{verbatim}
+#cmakedefine USE_OPTIONAL_FUNCTIONS
+\end{verbatim}
+这样,当使用ccmake或cmake -i命令时,
+\begin{verbatim}
+1)当用户将USE_OPTIONAL_FUNCTIONS置为ON时,config.h中有
+#define USE_OPTIONAL_FUNCTIONS
+2)当用户将USE_OPTIONAL_FUNCTIONS置为OFF时,config.h中有
+/*#define USE_OPTIONAL_FUNCTIONS */
+\end{verbatim}
+\subsection{指定install和test命令的参数}
+在生成Makefile之后,通常会使用make install和make test命令.install将编译好的文件,放置到系统所需的对应的文件夹中,test命令将使用一些简单测试样例测试工程是否正常运行.
+而CMake命令,可以指定install命令和test命令的默认参数.
+\paragraph{install代码举例}
+\subparagraph{对于子模块}的CMakeLists.txt
+\begin{verbatim}
+#指定 OptionalFunctions 库的安装路径# 即将上述库放置到/bin文件夹中.
+install (TARGETS OptionalFunctions DESTINATION bin)
+#即将上述库文件的头文件,放到/include文件夹中.
+install (FILES OptionalFunctio
+ons.h DESTINATION include)
+\end{verbatim}
+\subparagraph{对于根目录下}的CMakeLists.txt
+\begin{verbatim}
+#指定安装路径# 将可执行文件demo放到/bin文件夹中
+install (TARGETS demo DESTINATION bin)
+# 将/config.h 文件放置到include文件夹中.
+install (FILES "${PROJECT_BINARY_DIR}/config.h" 
+DESTINATION include)
+\end{verbatim}
+这样,当执行install命令时,可执行文件和库文件会被复制到路径
+\begin{verbatim}
+/usr/local/bin
+\end{verbatim}
+而config.h文件和头文件会被复制到路径
+\begin{verbatim}
+/usr/local/include
+\end{verbatim}
+其中/usr/local由CMAKE\_INSTALL\_PREFIX变量指定.
+\paragraph{test代码举例}
+\begin{verbatim}
+#启用测试
+enable_testing()# 1.测试程序是否成功运行,正常运行返回0,并通过测试.
+add_test (test_run Demo 5 2)
+#2.测试帮助信息是否可以正常提示
+add_test (test_usage Demo)# 设定测试的结果检验.
+#检查结果中是否包含"Usage: .* base exponent"字符串.# 其中PASS_REGULAR_EXPRESSION表示测试输出中
+# 是否包含"Usage: .* base eexponent".
+set_tests_properties (test_usage
+PROPERTIES 
+PASS_REGULAR_EXPRESSION "Usage: .* base exponent")
+#测试 5 的平方
+add_test (test_5_2 Demo 5 2)
+set_tests_properties (test_5_2
+PROPERTIES PASS_REGULAR_EXPRESSION "is 25")# 测试 10 的 5 次方
+add_test (test_10_5 Demo 10 5)
+set_tests_properties (test_10_5
+PROPERTIES PASS_REGULAR_EXPRESSION "is 100000")
+# 测试 2 的 10 次方
+add_test (test_2_10 Demo 2 10)
+set_tests_properties (test_2_10
+PROPERTIES PASS_REGULAR_EXPRESSION "is 1024")
+\end{verbatim}
+\subparagraph{也可以使用宏来实现}.
+\begin{verbatim}
+#定义一个宏，用来简化测试工作,使用macro定义宏.# do_test为宏名称,arg1 arg2 result为参数.
+macro (do_test arg1 arg2 result) 
+#添加测试.
+add_test (test_${arg1}_${arg2} Demo ${arg1} ${arg2})# 设定标准结果.
+set_tests_properties (test_${arg1}_${arg2}
+PROPERTIES PASS_REGULAR_EXPRESSION ${result})
+#宏结束.
+endmacro (do_test) 
+
+# 使用该宏进行一系列的数据测试
+do_test (5 2 "is 25")
+do_test (10 5 "is 100000")
+do_test (2 10 "is 1024") 
+\end{verbatim}
+\subsection{支持gdb}
+让CMake支持gdb\footnote{GNU Debugger.一款调试器,功能强大}的设置也很容易,只需要指定Debug 模式下开启-g 选项：
+\begin{verbatim}
+set(CMAKE_BUILD_TYPE "Debug")
+set(CMAKE_CXX_FLAGS_DEBUG 
+"$ENV{CXXFLAGS} -O0 -Wall -g -ggdb")
+set(CMAKE_CXX_FLAGS_RELEASE 
+"$ENV{CXXFLAGS} -O3 -Wall")
+\end{verbatim}
+\subsection{环境检查}
+要使用有时候可能要对系统环境做点检查,比如一个平台相关的特性的时候。
+下述例子中,检查系统是否自带pow函数.
+如果带有pow函数,就使用它;否则使用我们定义的power函数.
+\subparagraph{1.添加CheckFunctionExists宏}
+首先需要在根目录下\footnote{主CMakeLists.txt所在文件夹}的cmake文件夹--Modules中添加CheckFunctionExists.cmake文件.
+该文件在CMake安装目录下的Modules中有提供,因此上述操作没有必要.但如果CMake的Modules中没有提供对应操作,需要自己编写,并放置到上述路径下.
+这里只是举例,CMake的Modules中提供多种常用的系统环境检测文件(.cmake),如果没有所需文件,需要自己编写.
+\subparagraph{2.并在CMakeList.txt中添加代码}
+\begin{verbatim}
+#检查系统是否支持 pow 函数# 引入CheckFunctionExists.cmake文件.
+include (${CMAKE_ROOT}/Modules/CheckFunctionExists.cmake)
+
+#使用CheckFunctionExists.cmake文件# 提供的方法check_function_exists
+#check_function_exists(<function> <variable>)# 详细函数定义可以查看CheckFunctionExists.cmake文件
+# 若存在pow函数,HAVE_POW置1.
+check_function_exists (pow HAVE_POW)
+\end{verbatim}
+上述代码需要放置到configure\_file()命令之前,因此需要尽可能放在\\CMakeList.txt的前部.
+\subparagraph{3.在config.h.in定义相关宏变量}
+\begin{verbatim}
+// does the platform provide pow function?
+#cmakedefine HAVE_POW
+\end{verbatim}
+\subparagraph{4.在工程代码中使用\#ifdef-\#endif}
+\subsection{生成安装包}
+CPack是CMake的一个打包工具.
+为生成安装包,需要在工程根目录下的CMakeList.txt中添加代码:
+\begin{verbatim}
+# 构菇ㄒ桓鯟Pack安装包
+#导入InstallRequiredSystemLibraries模块.
+include (InstallRequiredSystemLibraries)# 设置版权信息,版本信息.
+set (CPACK_RESOURCE_FILE_LICENSE
+"${CMAKE_CURRENT_SOURCE_DIR}/License.txt")
+set (CPACK_PACKAGE_VERSION_MAJOR "${Demo_VERSION_MAJOR}")
+set (CPACK_PACKAGE_VERSION_MINOR "${Demo_VERSION_MINOR}")
+
+# 导入CPack模块
+include (CPack)
+\end{verbatim}
+之后便可以执行以下命令,生成二进制安装包:
+\begin{verbatim}
+cpack -C CPackConfig.cmake
+\end{verbatim}
+执行以下命令,生成源码安装包:
+\begin{verbatim}
+cpack -C CPackSourceConfig.cmake
+\end{verbatim}
+\newpage
+\section{常用命令}
+\begin{description}
+\item[project()] 指定项目名称
+\item[include\_directories(a)] 指定当前工程.h文件的路径为a,没有这条指令表示头文件在根目录下\footnote{CMakeList.txt所在文件夹}.
+\item[link\_directories(a)] 指定当前工程lib文件的路径为a.
+\item[aux\_source\_directories(a b)] 将路径a下所有文件,赋给b变量.
+\item[set(a b)] 赋值命令,将a的值设为b.\item[add\_executable(a b)] 生成可执行文件a(使用b文件生成).
+\item[target\_link\_libraries(a b)] 将b文件链接到可执行文件a中,用于link操作.\\ 相当于VS的依赖项,在这里需要注明所有用到的lib文件.
+\item[add\_subdirectory()] 指定本工程的子目录(子模块).
+\item[cmake\_minimum\_required()] 指定所需最低CMake版本.
+\item[add\_library()] 生成库文件,该条指令一般放在子目录下的CMakeList.txt.\\ 先将子目录内代码生成库文件,供根目录下工程链接.\\ 可使用SHARED或STATIC指定生成库类型.
+\item[if(a)-endif(a)]条件语句,类似的还有foreach,while等.\
+\item[add\_definitions()] 添加编译选项,自定义编译过程.
+\item[message(a "b")] 当a为ON时,输出"b".
+\item[set\_target\_properties()] 设定各种参数,如OUTPUT\_NAME,\\VERSION等.
+\item[option(a "b" c)] 变量a的状态(值)为c,提示信息为"b".可使用该命令进行条件编译.
+\item[ad\_dependencies] 添加编译依赖项.
+\item[less greater equal] 数字比较,小大等.
+\item[strless strgreater strequal] 字符串比较.
+\end{description}
+\newpage
+\section{常见CMake变量}
+\begin{description}
+\item[CMAKE\_C\_COMPILER] 指定c编译器.
+\item[CMAKE\_CXX\_COMPILER] 指定c++编译器.
+\item[EXECUTABLE\_OUTPUT\_PATH] 可执行文件输出路径
+\item[LIBRARY\_OUTPUT\_PATH] 生成库文件输出路径
+\item[CMAKE\_BUILD\_TYPE] 生成类型:debug,release等.
+\item[BUILD\_SHARED\_LIBS] 当其为ON生成共享库,当其为OFF时,生成静态库.
+\item[XXX\_SOURCE\_DIR] 代表源文件目录
+\item[XXX\_BINARY\_DIR] 代码二进制文件目录.
+\end{description}
+\end{document}

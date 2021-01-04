@@ -1,0 +1,368 @@
+\documentclass{ctexart}
+\usepackage{graphicx}
+
+\begin{document}
+
+\title{并行编程笔记-v 0.2}
+\author{王建鑫}
+\maketitle
+
+\newpage
+\section{并行计算简介}
+\paragraph{什么是并行计算}
+传统软件是串行执行的：
+\begin{itemize}
+ \item 一个大问题被分散成多个分散的指令。
+ \item 每个指令依次顺序执行。
+ \item 所有指令在单处理器中执行。
+ \item 一次只有一个执行在处理器中执行。
+\end{itemize}
+
+并行计算：
+\begin{itemize}
+ \item 一个大问题被分散成多个可以同时执行的任务。
+ \item 每一任务可以被分散成多个指令。
+ \item 每一任务中的指令可以在不同的处理器中同时执行。
+ \item 需要全局的调度机制。
+\end{itemize}
+
+\paragraph{概念和术语}
+\begin{itemize}
+  \item 冯·诺依曼结构（von Neumann Architecture）\\略
+  \item 弗林分类（Flynn‘s Taxonomy）
+  \begin{itemize}
+    \item SISD：Single Instruction stream Single Data stream
+    \item SIMD：Single Instruction stream Multiple Data stream
+    \item MISD：Multiple Instruction stream Single Data stream
+    \item MIMD: Multiple Instruction stream Multiple Data stream
+  \end{itemize}
+  \item 一些通用术语
+  \begin{itemize}
+    \item 超算（Supercomputing）
+    \item 高性能计算（High Performance Computing(HPC)）
+    \item 结点（Node）：在超算领域用来指代一台计算机，超级计算机由多个通过网络连接在一起的计算机构成。\footnote{包含I/O,处理器等部件}
+    \item CPU/Socket/Processor/Core
+    \item 任务；逻辑上的划分
+    \item 管道：流水线
+    \item 共享内存
+    \item 分布式内存：每个处理器均配有相应的内存
+    \item 对称多处理器：每个处理器所拥有的资源，和到每个资源的花费相等。
+    \item 通讯
+    \item 同步
+    \item 粒度：并行工作划分的细致程度
+    \item 并行总成：包括读取，处理，输出操作之后总体结果
+    \item 阿姆达尔定律(Amdahl's law）$speedup = \frac{1}{1-P}$\footnote{可加速潜能，与可并行的代码数量有关}
+  \end{itemize}
+\end{itemize}
+
+
+
+
+
+
+\newpage
+\section{并行计算内存架构}
+
+\subsection{共享内存}
+内存由多个处理器共享，分为UMA(Uniform Memory Access)和NUMA(Non-Uniform Memory Access)。
+
+编程简单。
+\begin{figure}[h!]
+  \centering
+  % Requires \usepackage{graphicx}
+  \includegraphics[width=0.7\linewidth]{gongxiangneicun.jpg}\\
+  \caption{共享内存}
+\end{figure}
+
+
+\subsection{分布式内存}
+每个处理器都拥有自己的本地内存。
+
+每个内存都有对应的处理器，访问速度快。
+\begin{figure}[h!]
+  \centering
+  % Requires \usepackage{graphicx}
+  \includegraphics[width=0.7\linewidth]{fenbuneicun.jpg}\\
+  \caption{分布内存}
+\end{figure}
+
+\subsection{混合分布-共享内存}
+
+上述两种模式混合。
+
+%\section{并行编程模型}
+
+%常见的并行编程模型：
+%\begin{enumerate}
+%  \item 共享内存
+%  \item 线程
+%  \item 分布内存
+%  \item 数据并行
+%  \item 混合
+%\end{enumerate}
+
+
+
+
+\newpage
+\section{并行编程的设计}
+\subsection{先搞明白问题再编程}
+开发并行软件的第一步就是搞明白你需要用并行程序解决的问题.
+
+在开始开发一个并行的程序之前,先搞明白这个问题是否可以并行解决.
+
+一个例子:
+\emph{计算一个分子的，数千个相互独立构象的势能,之后,计算能量构象的最小值.}
+
+这个问题可以并行解决.每个分子构象是独立的，是个并行问题.
+
+另一个例子:
+\emph{利用公式$ F(n) = F(n-1) + F(n-2) $,计算斐波那契数列.}
+
+计算F(n)的值,首先需要计算F(n-1)和F(n-2)的值.
+
+
+\subparagraph{确定程序的'热点'}:
+\begin{enumerate}
+	\item 知道主要的工作其实是在哪完成的.其实大部分科学或技术程序中的大部分问题都是在一小块程序中解决的.
+	\item 分析工具能帮上忙.
+	\item 关注平行的热点问题,忽略占用cpu很少的部分.
+\end{enumerate}
+
+\subparagraph{确定程序的'瓶颈'}:
+\begin{enumerate}
+	\item 是否有不成比例的慢或者导致平行工作终止或等待的区域?例如,I/O通常会拖慢程序.
+	\item 也许重构程序或者使用不同的算法可以去掉没有必要的慢.
+\end{enumerate}
+
+\subparagraph{确定并行的限制.通常数据间的相关性就是其中一类}
+
+可能的话,可以开发其他算法.这也许是开发一个并行应用最主要的需要考虑的问题.
+利用优化过的第三方并行软件和高度优化的数学库(IBM's ESSL, Intel's MKL, AMD's AMCL, etc.)
+
+
+\subsection{分割}	
+设计并行程序的第一步就是将一个问题分成多个分散的"块",这叫分割.
+有两种分割的基本方法:区域分割,功能分割.
+
+\subsubsection{区域分割}
+这种分割,跟问题有关的数据会被分割,每个并行的任务会只作用于一部分数据.
+有不同的方法分割数据.
+\subsubsection{功能分割}
+对于这种方法,主要关注计算是如何被实现的,而非数据是如何被操作的.问题会被分成必须要被完成的任务,一个任务会实现一整个问题的一部分.
+
+功能分割适合可以将问题分成不同任务的问题.
+
+结合两分割方法是比较普遍的.
+
+\subsubsection{举例：生态系统模型}
+每段程序计算一组生物的总数量,该数量取决于邻近组的数量.随着时间发展,每个进程计算它的当前状态,然后和邻近组交换信息.随后再计算它的状态.	
+\begin{figure}[h!]
+  \centering
+  % Requires \usepackage{graphicx}
+  \includegraphics[width=0.7\linewidth]{shengtaixitongmoxing.jpg}\\
+  \caption{生态系统模型}
+\end{figure}
+
+\subsubsection{举例：信号处理}
+一个音频信号数据集通过四个滤波器.每个滤波器都是独立的,第一段数据必须在通过第二个滤波器之前,先通过第一个滤波器.与此同时,第二段数据正在通过第一个滤波器.使得四个进程都同时工作.
+\begin{figure}[h!]
+  \centering
+  % Requires \usepackage{graphicx}
+  \includegraphics[width=0.7\linewidth]{yinpinchulimoxing.jpg}\\
+  \caption{音频处理模型}
+\end{figure}
+
+
+\subsubsection{举例：气候模型}
+不同的任务将通过不同的模型的部分.箭头将指示不同部分间的数据交换.大气模型产生风速数据,然后用于海洋模型,海洋模型将产生海表面温度用于大气模型.
+\begin{figure}[h!]
+  \centering
+  % Requires \usepackage{graphicx}
+  \includegraphics[width=0.7\linewidth]{qihoumoxing.jpg}\\
+  \caption{气候模型}
+\end{figure}
+
+
+
+\subsection{通信}
+\subsubsection{谁需要通信?}
+通信的需求取决于具体问题.
+
+\subsubsection{不需要通信}
+有些问题可以分解成其实并不需要通信的任务.这些问题叫做"embarrassingly parallel", 不需要通信或者只需要很少的通信.
+
+比如,想象一个图像处理问题,一张图片需要将每个黑像素或白像素翻转.图像数据可以很容易的被分为相互独立的任务.
+\subsubsection{需要通信}
+大多数应用都不会这么简单,需要不同任务间的数据分享.
+
+比如,2-D热量扩散问题.一点的温度需要使用邻近的温度才能计算出来,改变邻近区域的温度将直接影响本点的温度数据.
+
+
+\newpage
+\section{并行举例}
+
+\subsection{遍历像素}
+
+\begin{itemize}
+  \item 假设对于每个像素的处理与邻域无关
+  \item 顺序执行代码每次只计算一个像素
+\end{itemize}
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.2\linewidth]{xiangsuchuli.jpg}\\
+  \caption{遍历像素}\label{bianliyuansu}
+\end{figure}
+
+代码(0)如下：
+\begin{verbatim}
+    for( int i=0; i<cols; ++i)
+    {
+        for(int j=0; j<rows; ++j)
+        {
+            element(i,j) = function(i,j);
+        }
+    }
+\end{verbatim}
+
+\paragraph{并行改造方案1}
+\begin{itemize}
+  \item 将任务分块，如：子数组划分(如task1,task2...)
+  \item 不同子数组的处理不需要通信
+\end{itemize}
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.25\linewidth]{bingxingjiejuefangan1.jpg}\\
+  \caption{并行改造方案1}\label{bingxingjiejuefangan1}
+\end{figure}
+
+代码(1)如下：
+\begin{verbatim}
+  for( int i = task_start; i < task_end; ++i)
+  {
+    for(int j=0; j<rows; ++j)
+    {
+      element(i,j) = function(i,j);
+    }
+  }
+\end{verbatim}
+
+\textbf{如上例，在逻辑上将任务划分为多个小任务并行处理，这些小任务之间没有通信或通信较少，并且不需要任何调度，称之为"尬并行""易并行""尴尬并行"（embarrasingly parrallel）}
+
+优劣：
+\begin{itemize}
+  \item 人工分配任务，操作简单
+  \item 可迅速实现对现有顺序代码的并行改造
+  \item 粒度较粗，容易引起负载不均衡
+\end{itemize}
+
+\paragraph{并行改造方案2}
+\begin{itemize}
+  \item 主线程分配任务
+  \item 主线程收集子线程的处理结果
+  \item 子线程从主线程领取任务
+  \item 子线程运算，将结果返回给主线程
+\end{itemize}
+
+代码(2)举例：
+\begin{verbatim}
+  int pid = fork() // 新建线程
+  if( pid != 0)    // 对于主线程
+  {
+    SendTaskToThreads();
+    ReceiverResultFromThreads();
+  }
+  else             // 对于子线程
+  {
+    ReceiveTaskFromMaster();
+    DoTask();
+    SendResultToMaster();
+  }
+\end{verbatim}
+
+优劣：
+\begin{itemize}
+  \item 自动分配任务
+  \item 操作较复杂，不适合对现有代码进行并行改造的情景。
+  \item 粒度较细，负载较均衡
+  \item 有额外的运算支出，如通信、任务分配等
+\end{itemize}
+
+
+\subsection{计算PI}
+
+\begin{itemize}
+  \item 生成随机点
+  \item 用落在圆内点和所有点的个数近似圆面积和方形面积
+  \item 确定PI值
+\end{itemize}
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.5\linewidth]{jisuanpi.jpg}\\
+  \caption{PI的计算}\label{jisuanpi1}
+\end{figure}
+
+代码(3)举例：
+\begin{verbatim}
+  int total_point_number = 10000;
+  int circle_point_number = 0;
+
+  for( int i=0; i < total_point_number; ++i)
+  {
+    int x = random(0,1);
+    int y = random(0,1);
+    if( x*x + y*y < r*r)
+    {
+      circle_point_number++;
+    }
+  }
+
+  double PI = 4.0*circle_point_number/total_point_number;
+\end{verbatim}
+
+\begin{itemize}
+  \item 增加随机点个数，提高Pi的运算精度
+  \item 循环导致计算量巨大
+\end{itemize}
+
+\paragraph{计算Pi并行改造1}
+\begin{itemize}
+  \item 如案例1，并行改造1的思路
+  \item 将总任务分成多个子任务,每个子任务均执行上述操作
+  \item 最后将所有子任务的结果将加
+\end{itemize}
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.25\linewidth]{jisuanpibingxing.jpg}\\
+  \caption{PI的并行改造}\label{jisuanpibingxing}
+\end{figure}
+
+\paragraph{计算Pi并行改造2}
+\\
+代码(4)举例:
+如代码2所示，可具体为：
+\begin{verbatim}
+#ChildThread:  // 子线程
+  GenerateRandomNumber();
+  if(InsideCircle())
+  {
+    circle_count++;
+  }
+  SendMasterCircleCountAndTotalNumber();
+
+#MasterThread： // 主线程
+  ReceiveCircleCountAndTotalNumber();
+  ComputePI();
+\end{verbatim}
+\begin{itemize}
+  \item 基本思路和改造方案1一致
+  \item 任务调度和任务分配交给操作系统
+  \item 负载均衡，优化效果好，但增加额外计算支出
+\end{itemize}
+
+
+
+
+\end{document}

@@ -1,0 +1,268 @@
+\documentclass{ctexart}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{cite}
+
+\begin{document}
+\title{Linux Shell整理}
+\author{ }
+\maketitle
+
+\newpage
+\section{常见基本命令}
+\paragraph{格式}
+\begin{verbatim}
+  command [option] [param1] [param2] ...
+\end{verbatim}
+\paragraph{断行}当命令过长，一行写不开，可以使用“ \{\} ” 符号将命令分成两行。
+
+
+\subsection{简单命令}
+\begin{description}
+  \item[who] 列出所有使用系统的用户信息
+  \item[echo] 输出后续命令：有单引号‘’则原样输出，无单引号则以字符串格式输出（忽略字间连续空格）
+  \item[date] 显示当前日期
+  \item[cal] 显示日历
+  \item[clear] 清屏
+  \item[passwd] 修改当前用户密码
+\end{description}
+
+\subsection{文件相关命令}
+\subsubsection{文件显示}
+\begin{description}
+  \item[cat] 显示文件内容
+  \item[more] 显示文件内容，但是每次只显示一屏
+  \item[less] 显示文件内容，可上下翻页
+  \item[head] 显示文件内容，但只显示前几行内容
+  \item[tail] 显示文件内容，但只显示后几行内容
+  \item[touch] 刷新修改时间
+\end{description}
+
+
+\subsubsection{匹配，筛选，排序指定内容}
+\begin{description}
+  \item[grep] 筛选含有指定内容的词或短语
+  \begin{verbatim}
+//在文件f1和f2中寻找含有main或printf的行
+grep -i ‘main|printf’ f1 f2
+  \end{verbatim}
+  \item[sort] ？
+  \item[uniq] 删除重复行
+\end{description}
+
+
+\subsubsection{文件的比较}
+\begin{description}
+  \item[comm] 比较两份文件，输出1）仅在文件1中的行；2）仅在文件2中出现的行；3）两个文件的共同行。\emph{要求两份文件事先排序}
+  \item[diff] 比较两个文件。\emph{\textbf{不要求}两份文件事先排序}
+  \item[uniq] 删除重复行
+\end{description}
+
+
+\subsubsection{复制，删除和移动}
+
+\begin{description}
+  \item[cp] 复制文件
+  \item[rm] 删除文件
+  \item[mv] 移动文件或修改名称
+\end{description}
+
+\subsubsection{统计文件信息}
+
+\begin{description}
+  \item[wc] 统计文件的字数、行数等信息。
+\end{description}
+
+\subsection{目录相关命令}
+\subsubsection{新建或删除目录}
+\begin{description}
+  \item[mkdir] 新建目录
+  \item[rmdir] 删除目录
+\end{description}
+
+\subsubsection{切换工作目录和显示目录内容}
+\begin{description}
+  \item[cd] 切换工作目录
+  \item[ls] 显示当前目录下目录
+  \item[pwd] 显示当前工作目录
+\end{description}
+
+\subsubsection{目录的连接}
+\begin{description}
+  \item[ln] 硬连接
+  \item[ln -s] 软连接
+\end{description}
+
+\subsection{用户和权限}
+\begin{description}
+  \item[chmod] 修改权限
+  \begin{verbatim}
+// file权限，新增all用户的可执行x权限
+chmod a+x file
+// file权限，user用户的权限改为只读r
+chmod u=r file
+  \end{verbatim}
+  \item[umask] 新建文件的默认权限，删除对应权限
+  \begin{verbatim}
+// user权限不取消，group权限取消w权限，other权限都取消
+umask u=,g=w,o=rwxg
+  \end{verbatim}
+
+  \item[chgrp] 改变文件的所属用户组
+  \item[chown] 改变文件所属的用户或组
+
+\end{description}
+
+
+
+\subsection{进程相关命令}
+\begin{description}
+  \item[ps] 显示当前系统中所有进程
+  \item[kill] 终止某进程
+  \item[sleep] 暂停某进程
+\end{description}
+
+\subsection{解压操作}
+《解压专题》
+
+
+
+
+\newpage
+\section{Shell程序}
+这里介绍shell的编写方法及相关内容。
+\subsection{Shell执行方法}
+\begin{verbatim}
+1) bash < 脚本
+2) 脚本 [参数]
+3) ./脚本
+\end{verbatim}
+
+\subsection{Shell中的特殊字符}
+\paragraph{通配符}
+\subparagraph{*}可以用于匹配任意长度的任意字符。
+\begin{verbatim}
+f* = f, fa, f1, fa2, facsdcs
+\end{verbatim}
+
+\subparagraph{?}可以匹配一个的任意字符。
+\begin{verbatim}
+f? = fb, fa, f1, f2, fd
+\end{verbatim}
+
+\subparagraph{[ ]}可以匹配括号中任意一个字符。
+\begin{verbatim}
+f[1-9] = f1, f2, f3, f4, f5
+f[abcd] = fa, fb, fc, fd
+f[1-4] = f[1234]  // 可以用连字符省略数字或字符
+\end{verbatim}
+
+\subparagraph{!}表示不匹配后续字符
+\begin{verbatim}
+f[!1-9] = 排除 f1, f2, f3, f4, f5...
+f[!abcd] = 排除 fa, fb, fc, fd
+\end{verbatim}
+
+
+\paragraph{模式表达式}
+模式表表示需要匹配的内容，如果需要多个匹配内容使“或”运算符分隔。
+\subparagraph{*(模式表)}匹配模式表中出现的模式，可连续出现，且含不出现模式的情况。
+\begin{verbatim}
+file*(.c|.o) = filexx.c fileddf.o file filexx.c.o filexx.o.c
+\end{verbatim}
+
+\subparagraph{+(模式表)}匹配模式表中出现的模式，可连续出现，\emph{不含}不出现模式的情况。
+\begin{verbatim}
+file+(.c|.o) = filexxxx.c filedafdf.o filexx.c.o filexxx.o.c
+\end{verbatim}
+
+\subparagraph{?(模式表)}匹配模式表中出现的模式，\emph{不可}连续出现，且含不出现模式的情况。
+\begin{verbatim}
+file?(.c|.o) = file file.c file.o
+\end{verbatim}
+
+\subparagraph{@(模式表)}匹配模式表中出现的模式，\emph{不可}连续出现，但不含不出现模式的情况。
+\begin{verbatim}
+file@(.c|.o) = file.c file.o
+\end{verbatim}
+
+\subparagraph{!(模式表)}除模式表中内容，其他均匹配。
+
+
+
+\paragraph{引号}
+\subparagraph{“双引号”}\emph{除\$符号，`（倒引号）符号，反斜杠符号外}，其他作为普通字符。\$ 符号表示变量替换，可以将变量（如“\$HOME”）替换成对应的值（如“/home/user/”）。`表示指令替换，将``中指令的返回值，替换进字符，如`pwd`，会替换成当前文件路径。反斜杠表示转义字符。
+
+
+\subparagraph{‘单引号’}单引号中内容将除去所有特殊效果，仅作为字符。
+
+\subparagraph{\quad`倒引号`}如上文所述，倒引号会被替换成命令的返回值。
+
+
+
+\paragraph{输入、输出重定向符}
+
+\begin{itemize}
+  \item $<$ 将默认的输入，重定向至本文件。
+  \item $>$ 将默认的输出，重定向至本文件。
+  \item $>>$ 将默认的输出，重定向至本文件，以追加方式，附加到文件尾部。
+  \item $<<$
+\end{itemize}
+
+\paragraph{其他}
+\subparagraph{注释}用\#号后接注释
+\subparagraph{管道}用$|$隔开，前一文件的结果作为后一命令的输入
+\subparagraph{后台运行}命令后接$\&$符号
+
+
+可以每条命令占一行；也可以将命令后接分号，写在一行。
+
+$\&\&$与符号，表示前一条命令若执行成功，再执行后一条命令。
+$||$或符号，表示前一条命令若执行不成功，再执行后一条命令。
+
+数组：数组名=（值1 值2 值3 ...），可以使用*和@号表示数组中所有下标。
+\begin{verbatim}
+  A = (this is an example)
+  A[0] = this
+  A[1] = is
+  A[2] = an
+  A[*] = this is an example
+  A[@] = "this" "is" "an" "example"
+\end{verbatim}
+
+\paragraph{读取用户输入输出命令}
+\subparagraph{read}
+\subparagraph{echo}
+
+
+
+\subsection{控制结构}
+\begin{verbatim}
+if 条件
+then 表达式
+else 表达式
+fi
+\end{verbatim}
+
+\begin{verbatim}
+if 条件
+then 表达式
+elif 条件
+then 表达式
+else 表达式
+fi
+\end{verbatim}
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}

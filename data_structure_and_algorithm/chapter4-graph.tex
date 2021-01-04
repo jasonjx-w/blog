@@ -1,0 +1,137 @@
+\documentclass{ctexart}
+\usepackage{graphicx}
+\usepackage{cite}
+\usepackage{amsmath}
+
+
+
+\begin{document}
+\title{图(graph)}
+\author{ }
+\maketitle
+
+
+\section{图（graph）}
+图是由顶点（vertex）的集合及顶点间的关系（边，edges）的集合组成的一种数据结构。\emph{不考虑自环（self loop）或多重边（多重图，multigraph）}。
+
+\subsection{术语和概念}
+
+\subparagraph{有向图(directed graph)}图的边有方向，A到B和B到A不同。边用尖括号即$<A,B>$，$<B,A>$表示
+
+\subparagraph{无向图(undirected graph)}图的边没有方向，A到B与B到A是一条边，边用圆括号即（A，B）表示
+
+\subparagraph{完全图(complete graph)}任意两个顶点之间都有边的图。无向图有$\frac{n(n-1)}{2}$条边；有向图有$n(n-1)$条边
+
+\subparagraph{权(weight)}边上附加的权重系数
+
+\subparagraph{邻接顶点(adjacent vertex)}一条边连接的两个顶点互为邻接顶点
+
+\subparagraph{顶点的度(degree)}与某顶点相关联的边的个数，称为度
+
+\subparagraph{路径(path)和路径长度(path length)}从点A到点B期间经过的点的序列（或边的序列）称为路径。路径长度为期间所有边的长度之和
+
+\subparagraph{简单路径}路径上各顶点无重复（无回环，cycle）出现
+
+\subparagraph{连通图(connected graph)和连通分量(connected component)}在无向图中，若顶点A到B有路径，则称为\emph{连通}；若图中任意两点均连通，则称\emph{连通图}；非连通图的最大连通子图称为\emph{连通分量}
+
+\subparagraph{强连通图(strongly connected digraph)和强连通分量}有向图中，任意两点均存在路径（从A到B和从B到A 两条），则称此图为\emph{强连通图}；非强连通图的最大强连通子图叫做\emph{强连通分量}
+
+\subparagraph{生成树(spanning tree)} 包含图中所有顶点，且有尽可能少的边
+
+
+\section{抽象数据类型接口（ADTI）}
+图由一系列顶点表示，每条边由一对顶点表示。图除需要构造析构函数外，需要有插入、删除顶点函数，插入、删除边函数，获取邻接顶点函数。
+\begin{verbatim}
+    explicit Graph();
+    ~Graph();
+    bool InsertVertex(T vertex);  // 插入顶点
+    bool RemoveVertex(int index); // 删除顶点
+
+    bool InsertEdge(int index1, int index2, E weight);
+    bool RemoveEdge(int index1, int index2);
+    bool Display();
+\end{verbatim}
+
+\section{数据类型的实现：邻接矩阵(adjacency matrix)}
+图常用的存储方法有三种，\emph{邻接矩阵（adjacency matrix）}，\emph{邻接表（adjacency list）}，\emph{邻接多重表（adjacency multilist）}。
+
+这里只介绍邻接矩阵和邻接表两种方法，分别和其他数据结构的数组实现方法和链表实现方法对应。
+
+\paragraph{邻接矩阵}
+邻接矩阵是用于表示各个顶点之间关系的矩阵。若两个顶点（a，b）间存在边，则对应的元素（a，b）不为零。
+
+\emph{对于有向图，一般使用列坐标（第几行）表示边的起点；行坐标（第几列）表示边的终点。}
+$$
+E_{ij}=
+\begin{cases}
+1 & if\ (i,j) \in E\ or <i,j> \in E \\
+0 & else
+\end{cases}
+$$
+当图是无向图，对应的邻接矩阵为角对称矩阵。同时，某行（列）元素之和，是从改点出（入）射的边的个数，也称之为度。
+
+对于有向图，某行元素之和，是该顶点出射的度；某列元素之和，是该顶点入射的度。
+\begin{figure}[h!]
+  \centering
+  % Requires \usepackage{graphicx}
+  \includegraphics[width=0.5\linewidth]{adjacency_matrix.png}\\
+  \caption{有向图的邻接矩阵}\label{adjacency_matrix}
+\end{figure}
+
+因为不考虑自环情况，所以对角线元素均为0。
+
+如果是带权图，不可以继续使用0表示不连接，以防和权值为0混淆。可以用无限$\infty$表示顶点间不连接，连接的话使用具体权重值$w$。但是因为对角线元素没有意义，所以可以继续使用0。
+
+\paragraph{构造函数}使用邻接矩阵存储图，需要使用一个顺序表（一维数组），用于存放顶点的信息；使用一个二维数组，存放顶点之间的连接关系（边）。
+在构造图类时，需要根据最大顶点数，分配一个一维数组，和一个二维数组。
+
+其中给定一个指针E**，开辟一个二维数组空间，首先需要开辟一个一维数组，其元素类型为E*；随后对该一维数组的每个元素依次开辟类型为E的一维数组，形成二维数组。
+
+\emph{可寻址范围为：\\ 一维数组[0,vertex\_number)，二维数组[0,vertex\_number)*[0,vertex\_number)}
+
+\paragraph{顶点和边的插入}即给数组元素变量赋值
+
+\paragraph{顶点的删除}顶点的插入可以在\emph{最后位置}插入；删除操作需要将\emph{最后一个元素}覆盖到\emph{待删除元素位置}，之后删除\emph{最后一个元素}。所以删除一个顶点只需要将一维数组和二维数组中最后一个元素，覆盖到待删除结点处，并将记数变量减一，等同于尾删除。
+
+除了删除顶点，还需\emph{删除顶点和其他顶点的连接关系}。当一顶点被删除后，无论是入射到该点的边，还是从该点出射的边，均要断掉。所以需要清空与该点有关的行、列元素，即先将最后一行和最后一列覆盖到当前顶点所在的行和列，随后将计数变量减一，尾删除。
+
+\paragraph{边的删除}清空边数据，并自减计数变量。
+
+\paragraph{寻找邻接顶点}邻近顶点指该顶点指向的顶点，所以在邻接矩阵中搜索\emph{行向量}。
+
+
+邻接矩阵存储图的方式，优点是寻址数据更高效，但当矩阵为稀疏矩阵时，空间利用率低。可使用\emph{邻接表}的存储方式。
+
+\section{数据类型的实现：邻接表(adjacency list)}
+使用邻接表的存储方式，需要两种结点结构：\emph{顶点结点}和\emph{边结点}。
+
+其\emph{（出边表）}基本原理是，顶点结点在一个\emph{顺序表}中存储。每个顶点结点中的\emph{边结点指针域}指向“以自己为起点的边的边结点”，而这个边结点的指针域指向“以该结点出射的另一条边的边结点”。即，一个顺序表存储顶点，每个顶点依次链接着以自己为出射结点的边的链表，而边结点中存放着对应的终点结点的id。
+
+所以顶点结点有两个域，分别存放数值和边结点的指针。
+
+边结点中含有三个域，分别是1）自己终点顶点结点的id；2）边的权值；3）指向下一条边结点的指针。
+
+\emph{入边表：每个顶点结点链接着“以自己为终点”的边结点。}
+
+
+\paragraph{图的遍历（graph traversal）}
+可分为深度优先搜索（DFS,depth first search）和广度优先搜索（BFS,breadth first search）
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}

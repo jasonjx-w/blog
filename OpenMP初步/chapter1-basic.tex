@@ -1,0 +1,167 @@
+\documentclass{ctexart}
+\usepackage{graphicx}
+\usepackage{cite}
+
+\begin{document}
+\title{OpenMP总结}
+\author{ }
+\maketitle
+
+
+
+\section{简介}
+一段典型的程序可由下图描述。其中主线在几个结点上，可以并行运行，随后再汇总成一个线程。
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.7\linewidth]{1.jpg}\\
+  \caption{程序结构}\label{fig_1}
+\end{figure}
+使用OpenMP可以将单一线程改造成多线程执行。只需在程序中注明相应指令，编译器自动将代码转换成并行代码。
+
+\begin{verbatim}
+举例：
+#pragma omp parallel  // omp 指令
+{
+    int i;
+    printf("hello world\n");
+    for(i=0;i<6;++i){
+        printf("iter:%d\n",i);
+    }
+}
+\end{verbatim}
+这样编译器会自动将代码并行化。
+
+\section{OpenMP指令初步}
+\paragraph{\#pragma omp parallel for}可以将for循环并行化。
+\begin{verbatim}
+举例：
+#pragma omp parallel for  // omp 指令
+for(i=0;i<6;++i){
+    function();
+}
+\end{verbatim}
+
+\paragraph{\#pragma omp parallel for shared()/ private()}可以限定变量的属性：是多个线程共享还是私有。
+
+共享变量在多个并行进程间共享，因此多个线程之间会相互干扰；而私有变量则不会受其他线程的干扰。
+\begin{verbatim}
+举例：
+int x,y;
+#pragma omp parallel for private(x,y) // omp 指令
+for(i=0;i<6;++i){
+    x = a[i];
+    y = b[i];
+    function(x,y);
+}
+\end{verbatim}
+
+其中x，y为本线程的中间变量，不希望收到其他线程的干扰，所以才使用私有的方式。
+
+如果想要某变量对所有线程可见，那就需要使用共享模式。
+\begin{verbatim}
+举例：
+int shared_variable = 0;
+#pragma omp parallel for shared(shared_variable) // omp 指令
+for(i=0;i<6;++i){
+    function(shared_variable);
+}
+\end{verbatim}
+
+
+\paragraph{\#pragma omp critical}
+但是有些变量较为特殊，无论共享还是私有都不对，比如累加操作sum。
+它既希望对多个线程可见，又不希望多个线程同时修改该变量，出现不可预知的操作。
+\begin{verbatim}
+举例：
+int sum = 0;
+#pragma omp parallel for shared(sum) // omp 指令
+for(i=0;i<6;++i){
+    #pragma omp critical // omp 指令
+    sum += a[i]+b[i];
+}
+\end{verbatim}
+
+\paragraph{reduction()}
+类似上述加和操作sum这样的变量，可以使用规约(reduction)操作。
+\emph{这类变量会将多个线程的处理结果，汇总成一个变量。}
+
+因此上述代码可以改为
+\begin{verbatim}
+#pragma omp parallel for reduction(+:sum) // omp 指令
+for(i=0;i<6;++i){
+    #pragma omp critical // omp 指令
+    sum += a[i]+b[i];
+}
+\end{verbatim}
+其中，“+：”符号代表累加操作。另外还支持以下操作：
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.7\linewidth]{2.jpg}\\
+  \caption{规约操作}\label{fig_2}
+\end{figure}
+
+\paragraph{进程调度（schedule）}
+\subparagraph{schedule(static/dynamic/guided)}
+\begin{description}
+  \item[static] 静态调度。比如某代码需要100次迭代，使用代码schedule(static，4)，则原循环被分成100/4=25 块。其中某块将会被分给某线程执行。
+  \item[dynamic] 动态调度。上述的某块代码将会被动态分配给某线程。
+  \item[guided] 类似动态调度，开销较小。
+\end{description}
+
+\subparagraph{section}
+上述过程采用自动的方式将程序分块，使用section可以手动将程序分块。
+
+\begin{verbatim}
+举例：
+#pragma omp parallel sections // omp 指令
+{
+    #pragma omp section
+    red();
+    #pragma omp section
+    green();
+    #pragma omp section
+    yellow();
+}
+\end{verbatim}
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.3\linewidth]{3.jpg}\\
+  \caption{section}\label{fig_3}
+\end{figure}
+
+这样，上述三个操作将在逻辑上并行执行（具体执行过程，考虑操作系统的调度，实际CPU核的数量）。
+
+\subparagraph{single/master}
+single可以规定某操作只执行一遍。
+\begin{verbatim}
+举例：
+#pragma omp parallel  // omp 指令
+{
+    function1();
+    #pragma omp single
+    {
+        function2();
+    }
+    function3();
+}
+\end{verbatim}
+上述代码中，function2()只会被一个线程执行，并不会被每个线程执行。
+类似操作还有master，规定只有主线程可以执行对应代码。
+
+\section{OpenMP API}
+OpenMP还提供相应的API函数，比如：
+\begin{enumerate}
+  \item omp\_get\_thread\_num()，返回当前线程ID
+  \item omp\_get\_num\_threads()，返回并行线程个数
+\end{enumerate}
+
+
+
+
+
+
+
+
+\end{document}

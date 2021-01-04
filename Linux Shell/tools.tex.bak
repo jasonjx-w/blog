@@ -1,0 +1,36 @@
+\documentclass{ctexart}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{cite}
+
+\begin{document}
+\title{gcc gdb和make工具}
+\author{ }
+\maketitle
+
+
+
+
+
+
+
+\newpage
+\section{GCC（GNU Compiler Collection）编译工具}
+
+\subsection{编译过程}
+编译过程，大体可以分四个过程：预处理（preprocessing）、编译（compiler）、汇编（assembling）、链接（linking）。其中预处理包括引入文件（include），替换宏（define），处理条件编译指令（ifdef），以及处理其他的编译指令（\#pragma）。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}

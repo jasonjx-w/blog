@@ -1,0 +1,1 @@
+[EM\_algorithm\_2coin\_example.pdf](resources/66A83F350DB0926EE286802C0F2CA3EA.pdf)

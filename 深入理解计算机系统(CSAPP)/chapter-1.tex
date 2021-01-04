@@ -1,0 +1,72 @@
+\documentclass{ctexart}
+
+
+
+\begin{document}
+\title{第一章\ 计算机系统}
+\maketitle
+
+\section{编译过程}
+\begin{enumerate}
+  \item 预处理
+  \item 编译：将高级语言编译成汇编语言。
+  \item 汇编器：将汇编汇编成二进制代码。
+  \item 链接器
+\end{enumerate}
+
+
+\section{系统硬件组成}
+\begin{itemize}
+  \item 总线
+  \item I/O设备
+  \item 主存
+  \item 处理器
+\end{itemize}
+
+
+\section{缓存与存储层次结构}
+一段代码运行过程中，可能涉及从输入设备读入信息，读取硬盘中数据到主存，将主存中数据加载到CPU中寄存器，最后将寄存器中内容拷贝至输出设备。
+
+整个过程将资源浪费在数据的传递中。为了加快数据移动，引入\emph{缓存}概念：将使用率高的数据存放在存储速度快的存储器中。
+
+为了降低成本，一般将高速存储器和低速存储器混用，形成存储设备层次结构。
+
+
+\section{进程和线程}
+一个进程可以由数个线程组成，这些线程共享一个地址空间。
+
+
+\section{虚拟存储器}
+每个进程独占地使用主存，即虚拟地址空间。
+
+虚拟地址空间高位保留给操作系统，低位用于存储用户进程代码和数据。虚拟地址空间从低到高可以分为多个区：
+\begin{itemize}
+  \item 程序代码和数据
+  \item 堆
+  \item 共享库
+  \item 栈
+  \item 内核虚拟存储器
+\end{itemize}
+
+
+
+\section{文件}
+设备的抽象。
+
+
+\section{并发和并行}
+\begin{enumerate}
+  \item 单处理器
+  \item 多处理器：多核和超线程（一个核可以执行多个线程）
+\end{enumerate}
+
+如果处理器可以超过一个周期一条指令的执行速率，称之为超标量。
+
+指令级并行：同时多个指令并行执行。
+
+
+
+
+
+
+\end{document}

@@ -1,0 +1,116 @@
+\documentclass{ctexart}
+\usepackage{graphicx}
+
+\begin{document}
+\title{并行方案测试}
+\author{王建鑫}
+\maketitle
+
+\newpage
+\section{测试方案}
+选择最为典型的可以并行计算的操作：均值滤波，作为基准对比多种并行加速方案性能。
+
+并行加速方案有：
+\begin{itemize}
+  \item openmp
+  \item 手动并行
+  \item opencl
+\end{itemize}
+
+
+编写多种并行加速方案代码。不断改变均值滤波的窗口尺寸以增加计算量，对比不同并行方案的性能。
+
+\paragraph{窗口直径为5：}
+当窗口直径为5像素时，结果如图\ref{k5}。
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.8\linewidth]{k5.JPG}\\
+  \caption{窗口直径为5}\label{k5}
+\end{figure}
+其中串行计算时间为：29ms；openmp通过8线程并行，计算时间为：21ms；手动编写并行代码花费：45ms；使用OpenCL花费：767ms。
+
+
+\paragraph{窗口直径为21：}
+当窗口直径为21像素时，结果如图\ref{k21}。
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.8\linewidth]{k21.JPG}\\
+  \caption{窗口直径为21}\label{k21}
+\end{figure}
+其中串行计算时间为：232ms；openmp通过8线程并行，计算时间为：102ms；手动编写并行代码花费：103ms；使用OpenCL花费：703ms。
+
+
+
+\paragraph{窗口直径为51：}
+当窗口直径为51像素时，结果如图\ref{k51}。
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.8\linewidth]{k51.JPG}\\
+  \caption{窗口直径为51}\label{k51}
+\end{figure}
+其中串行计算时间为：1071ms；openmp通过8线程并行，计算时间为：309ms；手动编写并行代码花费：315ms；使用OpenCL花费：652ms。
+
+
+
+
+
+
+\paragraph{窗口直径为101：}
+当窗口直径为101像素时，结果如图\ref{k101}。
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.8\linewidth]{k101.JPG}\\
+  \caption{窗口直径为101}\label{k101}
+\end{figure}
+其中串行计算时间为：4276ms；openmp通过8线程并行，计算时间为：1153ms；手动编写并行代码花费：1246ms；使用OpenCL花费：674ms。
+
+
+
+\paragraph{窗口直径为151：}
+当窗口直径为151像素时，结果如图\ref{k151}。
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.8\linewidth]{k151.JPG}\\
+  \caption{窗口直径为151}\label{k151}
+\end{figure}
+其中串行计算时间为：11377ms；openmp通过8线程并行，计算时间为：3220ms；手动编写并行代码花费：3716ms；使用OpenCL花费：760ms。
+
+
+
+
+\paragraph{窗口直径为201：}
+当窗口直径为201像素时，结果如图\ref{k201}。
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.8\linewidth]{k201.JPG}\\
+  \caption{窗口直径为201}\label{k201}
+\end{figure}
+其中串行计算时间为：26447ms；openmp通过8线程并行，计算时间为：5249ms；手动编写并行代码花费：6200ms；使用OpenCL花费：857ms。
+
+
+\paragraph{汇总}
+将上述时间花费汇总至一个图\ref{conclusion}中。
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.8\linewidth]{conclusion.JPG}\\
+  \caption{汇总}\label{conclusion}
+\end{figure}
+
+当计算任务量逐渐增加，串行计算消耗时间明显增加。
+
+而OpenMP则是由自动优化，优化效果明显，但其瓶颈是CPU的计算能力，当任务量增加到一定程度，其运算时间也不可避免的增加。
+
+手动并行编程则是将任务手动的分成多线程，其瓶颈也是CPU的计算能力。当任务量逐渐增加，这种方案和OpenMP效果差不多。
+
+OpenCL在任务量较小时，速度缓慢。当任务量巨大时，其优势明显。这种方案的瓶颈是内存读写速度，由于内存读写速度较慢，在任务量较少时严重拖慢计算速度；%但是这种方案突破了CPU 的计算能力瓶颈，
+当计算任务巨大时，将任务分配至异构平台，可以大大减少CPU负担，减少计算时间。所以在上述各个方案计算时间明显增加时，这种方案计算时间一直保持平稳。
+
+
+\end{document}

@@ -1,0 +1,53 @@
+\documentclass{ctexart}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{cite}
+
+\begin{document}
+\title{gcc gdb和make工具}
+\author{ }
+\maketitle
+
+
+
+
+
+
+
+\newpage
+\section{GCC（GNU Compiler Collection）编译工具}
+
+\subsection{编译过程}
+编译过程，大体可以分四个过程：预处理（preprocessing）、编译（compiler）、汇编（assembling）、链接（linking）。
+
+其中预处理包括引入文件（include），替换宏（define），处理条件编译指令（ifdef），以及处理其他的编译指令（\#pragma）。
+
+编译过程，首先需要检查语法错误（并给出提示信息），随后将源码直译成中间码或汇编代码。
+
+汇编过程可以将汇编代码翻译成目标机器代码，机器代码分为两部分：代码段（程序指令）和数据段（全局或静态数据）。
+
+链接过程将不同文件中的符号对应起来，使目标文件连成整体。链接模式分为：静态链接和动态链接。其中静态链接在编译时就将代码从其所在文件复制到可执行文件中，形成一个完整代码。因此在执行时无需访问外部文件。而动态链接就是在可执行文件中记录外部文件的相关信息。只有在执行时，才会将外部文件找出，连入可执行文件。
+
+
+\subsection{gcc工具}
+
+略
+
+\subsection{gdb工具}
+gdb是GNU组织发布的一种调试工具，它可是按照用户想法控制程序行为；可以在指定条件处停止；检查问题；改变程序执行环境等。
+
+启动gdb的方法有：
+1）shell命令gdb；2）将可执行文件作为参数gdb program；3）将可执行文件和其他文件作为参数gdb program file；4）将PID作为参数，使gdb和某进程绑定gdb program 1234。
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}

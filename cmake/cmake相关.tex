@@ -1,0 +1,19 @@
+\documentclass{ctexart}
+
+
+
+\begin{document}
+
+\section{关于cmake,make和gcc}
+gcc(GNU Compiler Collection),GNU编译器套件,用于编译源文件.可以使用gcc命令直接编译源文件.
+
+但是当源文件比较多的时候,常常会使用make命令.
+make就是将gcc的编译指令写在makefile中,运行make命令,批处理makefile中的命令,简化编译操作.
+
+makefile需要手写,且其中可能存在与平台有关的命令,用户界面并不友好.利用cmake工具,指定编译所需的信息和要求,便可以自动生成makefile.
+
+使用cmake需要在CMakeLists.txt中指定编译所需信息和要求.而通常使用IDE配置工程时,就是在完成类似类似工作.类似cmake工具的还有autotools,qmake等.
+
+
+
+\end{document}

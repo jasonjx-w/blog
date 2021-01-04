@@ -1,0 +1,61 @@
+\documentclass{ctexart}
+\usepackage{graphicx}
+\usepackage{cite}
+\usepackage{amsmath}
+\usepackage{multirow}
+
+\begin{document}
+
+\section{绪论}
+
+\paragraph{数据和数据结构}
+数据可以分为数值性数据，包括各种整型，浮点型，复数等数据类型；和非数值数据，如文字，图片，语音等。
+
+\paragraph{数据结构类型的分类}
+线性结构可以分为\emph{线性结构（linear structure）}和\emph{非线性结构（nonlinear structure）}。
+
+
+\begin{table}[!h]
+\centering
+\begin{tabular}{|c|c|c|}
+\hline
+\multirow{7}{*}{线性结构}&           直接存储         & 顺序表（数组） \\
+                         \cline{2-3}
+        &                    \multirow{4}{*}{顺序存储}& （链）表 \\
+                                                      \cline{3-3}
+        &                                             & 栈 \\
+                                                      \cline{3-3}
+        &                                             & 队列 \\
+                                                      \cline{3-3}
+        &                                             & 优先队列 \\
+                         \cline{2-3}
+        &                    \multirow{2}{*}{字典结构}& 词典 \\
+                                                      \cline{3-3}
+        &                                             & 散列 \\
+\hline
+\multirow{4}{*}{非线性结构}& \multirow{2}{*}{层聚类}  & 树 \\
+                                                      \cline{3-3}
+        &                                             & 堆 \\
+                          \cline{2-3}
+        &                    \multirow{2}{*}{群聚类}  & 集合 \\
+                                                      \cline{3-3}
+        &                                             & 图 \\
+\hline
+\end{tabular}
+\end{table}
+
+
+\subparagraph{线性结构}又称线性表，所有数据元素都按某种次序排列在一个序列中。这种结构又可以根据存储方式的不同，分为\emph{直接存取结构}，\emph{顺序存取结构}和\emph{字典结构}。
+
+直接存储结构，可以直接访问任何位置的元素，无需访问其前驱。
+
+顺序存储结构，访问某元素前，必须访问其前驱。
+
+字典结构，可以根据某元素的值，迅速定位该元素。
+
+\subparagraph{非线性结构}主要包括树结构、图结构和集合。树结构是一种层聚类结构，通过父结点可以访问其子结点，整个数据结构具有层次结构。图结构是一种群聚类结构，包含结点集合和边集合两部分，根据结点和边的相对关系组织起来。
+
+\end{document}
+
+
+
