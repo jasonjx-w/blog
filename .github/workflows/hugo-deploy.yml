@@ -1,22 +1,23 @@
-name: Deploy Hugo Site to Github Pages on Master Branch
+name: github pages
 
 on:
   push:
     branches:
       - master
+      - main
 
 jobs:
   build-deploy:
     runs-on: ubuntu-18.04
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
         with:
-          submodules: true
+          submodules: recursive
 
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v2
         with:
-          hugo-version: '0.62.2'
+          hugo-version: 'latest'
           # extended: true
 
       - name: Build
