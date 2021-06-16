@@ -1,0 +1,4 @@
+baseURL = "http://jasonwang.work/"
+languageCode = "zh-cn"
+title = "Jason's work"
+theme = "simple"
