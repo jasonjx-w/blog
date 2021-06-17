@@ -31,14 +31,19 @@ fi
 
 cat > $FILE <<EOF
 ---
-layout:      article   # 指定使用的模板文件，“_layout” 目录下的模板文件名决定变量名
-title:       $TITLE
-date:        $DATE
-category:    blog   # 文章的类别
-description: description
-published:   true   # default true 设置 “false” 后，文章不会显示
-permalink:   /:categories/:year/:month/:day/:title.html  # 覆盖全局变量设定的文章发布格式
+author:    ""
+date:      $DATE
+title:     $TITLE
+linktitle: $TITLE
+menu:
+  main:
+    parent:  ""
+next:
+prew:
+weight: 10
 ---
+
+
 EOF
 
 cd -
