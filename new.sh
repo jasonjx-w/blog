@@ -11,17 +11,6 @@ TITLE=$1
 DATE=$(date +%Y-%m-%d)
 FILE=$DATE-$TITLE.md
 
-# mkdir title name dir
-if [ -d $TITLE ]; then
-  echo "[ERROR] Found dir $TITLE already!"
-  exit 1
-fi
-
-mkdir $TITLE
-
-cd $TITLE
-# mkdir dir for assets
-mkdir assets
 
 # new file
 if [ -f $FILE ]; then
@@ -48,7 +37,7 @@ EOF
 
 cd -
 
-mv $TITLE $DST
+mv $FILE $DST
 
 echo "[INFO] Create new file successfully."
-echo "[INFO] vim $DST/$TITLE/$FILE"
+echo "[INFO] vim $DST/$FILE"
