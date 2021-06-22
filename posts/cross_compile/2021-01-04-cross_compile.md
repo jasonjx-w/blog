@@ -1,15 +1,11 @@
 ---
 title:       protobuf等工具的交叉编译过程
 date:        2020-10-20
-categories:
-- "env"
 tags:
 - "cross compile"
 menu:
   main:
     parent:  ""
-next:
-prew:
 weight: 10
 ---
 

@@ -1,13 +1,11 @@
 ---
-author:    ""
-date:      2021-06-22
 title:     Tensorflow Runtime 简介
-linktitle: tf_runtime
+date:      2021-06-22
+tags:
+- "tf"
 menu:
   main:
     parent:  ""
-next:
-prew:
 weight: 10
 ---
 

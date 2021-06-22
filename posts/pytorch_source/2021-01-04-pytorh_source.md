@@ -1,3 +1,15 @@
+---
+title:       Pytorch源码阅读
+date:        2020-10-20
+tags:
+- "pytorch"
+menu:
+  main:
+    parent:  ""
+weight: 10
+---
+
+# `Pytorch` 源码阅读
 
 ## pytorch中的概念
 * TH = TorcH
