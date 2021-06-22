@@ -17,12 +17,22 @@ FILE=$DATE-$TITLE.md
 
 
 # deploy file
+pushd $DST
 
-## create file
-if [ -f $FILE ]; then
-  echo "[ERROR] Found $FILE already exists!"
-  exit 1
-fi
+  ## create folder
+  if [ -d $TITLE ]; then
+    echo "[ERROR] Found dir $TITLE already exists!"
+    exit 1
+  fi
+
+  mkdir $TITLE
+  pushd $TITLE
+    ln -s ../images 
+    ## create file
+    if [ -f $FILE ]; then
+      echo "[ERROR] Found $FILE already exists!"
+      exit 1
+    fi
 
 cat > $FILE <<EOF
 ---
@@ -40,22 +50,12 @@ menu:
     parent:  ""
 weight: 10
 ---
-
-
 EOF
 
+  popd  # TITLE
 
-# create folder
-pushd $DST
-  if [ -d $TITLE ]; then
-    echo "[ERROR] Found dir $TITLE already exists!"
-    exit 1
-  fi
-popd
+popd  # DST
 
-mkdir $TITLE
-mv $FILE $TITLE/
-mv $TITLE $DST/
 
 # print log
 echo "[INFO] Create new file successfully."

@@ -1,11 +1,16 @@
 ---
-layout:      article   # 指定使用的模板文件，“_layout” 目录下的模板文件名决定变量名
-title:       OpenCL笔记总结
+title:       protobuf等工具的交叉编译过程
 date:        2020-10-20
-category:    blog   # 文章的类别
-description: description
-published:   true   # default true 设置 “false” 后，文章不会显示
-permalink:   /:categories/:year/:month/:day/:title.html  # 覆盖全局变量设定的文章发布格式
+categories:
+- "env"
+tags:
+- "cross compile"
+menu:
+  main:
+    parent:  ""
+next:
+prew:
+weight: 10
 ---
 
 # protobuf
