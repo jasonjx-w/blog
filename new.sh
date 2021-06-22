@@ -1,11 +1,13 @@
 #!/bin/bash
 
+
 # usage
 if [ $# != 1 ]; then
   echo "Usage:"
   echo "  $0 article_name"
   exit 1
 fi
+
 
 # env
 DST=./content
@@ -14,7 +16,9 @@ DATE=$(date +%Y-%m-%d)
 FILE=$DATE-$TITLE.md
 
 
-# create file
+# deploy file
+
+## create file
 if [ -f $FILE ]; then
   echo "[ERROR] Found $FILE already!"
   exit 1
@@ -37,9 +41,18 @@ weight: 10
 
 EOF
 
-# deploy file
-mv $FILE $DST
+# create folder
+if [ -d $TITLE ]; then
+  echo "[ERROR] Found dir $TITLE already!"
+  exit 1
+else
+  mkdir $TITLE
+  mkdir $TITLE/images
+fi
 
-# log
+mv $TITLE $DST
+mv $FILE $DST/$TITLE/
+
+# print log
 echo "[INFO] Create new file successfully."
-echo "[INFO] vim $DST/$FILE"
+echo "[INFO] vim $DST/$TITLE/$FILE"
