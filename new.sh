@@ -27,7 +27,7 @@ pushd $DST
 
   mkdir $TITLE
   pushd $TITLE
-    ln -s ../images 
+    mkdir $DATE-$TITLE
     ## create file
     if [ -f $FILE ]; then
       echo "[ERROR] Found $FILE already exists!"
@@ -53,7 +53,6 @@ weight: 10
 EOF
 
   popd  # TITLE
-
 popd  # DST
 
 
