@@ -10,7 +10,7 @@ fi
 
 
 # env
-DST=./content
+DST=./posts
 TITLE=$1
 DATE=$(date +%Y-%m-%d)
 FILE=$DATE-$TITLE.md
@@ -47,7 +47,6 @@ if [ -d $TITLE ]; then
   exit 1
 else
   mkdir $TITLE
-  mkdir $TITLE/images
 fi
 
 mv $TITLE $DST
