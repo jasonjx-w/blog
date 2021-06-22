@@ -24,40 +24,26 @@ if [ -f $FILE ]; then
   exit 1
 fi
 
-# cat > $FILE <<EOF
-# ---
-# author:    ""
-# date:      $DATE
-# title:     $TITLE
-# linktitle: $TITLE
-# menu:
-#   main:
-#     parent:  ""
-# next:
-# prew:
-# weight: 10
-# ---
-# 
-# 
-# EOF
 cat > $FILE <<EOF
-+++
-title = "$TITLE"
-description = ""
-tags = [
-    "",
-    "",
-]
-date = "$DATE"
-categories = [
-    "",
-    "",
-]
-menu = "main"
-+++
+---
+title:     $TITLE
+date:      $DATE
+desciption: ""
+categories:
+- ""
+- ""
+tags:
+- ""
+- ""
+menu:
+  main:
+    parent:  ""
+weight: 10
+---
 
 
 EOF
+
 
 # create folder
 pushd $DST
