@@ -1,8 +1,6 @@
 ---
 title:       神经网络反向传播原理
 date:        2020-10-20
-categories:
-- "dnn"
 menu:
   main:
     parent:  ""
