@@ -20,37 +20,56 @@ FILE=$DATE-$TITLE.md
 
 ## create file
 if [ -f $FILE ]; then
-  echo "[ERROR] Found $FILE already!"
+  echo "[ERROR] Found $FILE already exists!"
   exit 1
 fi
 
+# cat > $FILE <<EOF
+# ---
+# author:    ""
+# date:      $DATE
+# title:     $TITLE
+# linktitle: $TITLE
+# menu:
+#   main:
+#     parent:  ""
+# next:
+# prew:
+# weight: 10
+# ---
+# 
+# 
+# EOF
 cat > $FILE <<EOF
----
-author:    ""
-date:      $DATE
-title:     $TITLE
-linktitle: $TITLE
-menu:
-  main:
-    parent:  ""
-next:
-prew:
-weight: 10
----
++++
+title = "$TITLE"
+description = ""
+tags = [
+    "",
+    "",
+]
+date = "$DATE"
+categories = [
+    "",
+    "",
+]
+menu = "main"
++++
 
 
 EOF
 
 # create folder
-if [ -d $TITLE ]; then
-  echo "[ERROR] Found dir $TITLE already!"
-  exit 1
-else
-  mkdir $TITLE
-fi
+pushd $DST
+  if [ -d $TITLE ]; then
+    echo "[ERROR] Found dir $TITLE already exists!"
+    exit 1
+  fi
+popd
 
-mv $TITLE $DST
-mv $FILE $DST/$TITLE/
+mkdir $TITLE
+mv $FILE $TITLE/
+mv $TITLE $DST/
 
 # print log
 echo "[INFO] Create new file successfully."
